@@ -38,21 +38,30 @@ SECTIONS
         KEEP(*(.isr_vector))
         *(.text)
     } > FLASH
-    .rodata : { *(.rodata) } > FLASH
     
-    /* R/W things */
+    .rodata :
+    {
+        *(.rodata)
+    } > FLASH
+    
+    /* R/W things/things in ram */
     __DATA_BEGIN_IN_FLASH__ = LOADADDR(.data); /* */
-    .data :
+    .data : ALIGN(4) /* Align data to make init code faster at the expense of a few bytes */
     {
         /* Will need to be copied from flash into sram at startup */
         __DATA_BEGIN__ = .;
         *(.data)
+        
         __DATA_END__ = .;
     } > SRAM AT> FLASH
-    .bss :
+    
+    /* Todo set that up */
+    /**(.text.ram) Can use the .text.ram section in assembly or c to put function into ram */
+    
+    .bss : ALIGN(4) /* Align bss to make init code faster at the expense of a few bytes */
     {
         __BSS_BEGIN__ = .;
         *(.bss)
         __BSS_END__ = .;
-    } > SRAM /* Can go directly into SRAM because it is not initialized*/
+    } > SRAM /* Can go directly into SRAM because it is not initialized */
 }
