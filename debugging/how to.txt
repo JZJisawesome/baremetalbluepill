@@ -4,7 +4,7 @@ Use custom openocd config file
 Use openocd:
 openocd -f /usr/share/openocd/scripts/interface/stlink-v2.cfg -f ./clonestm32f1x.cfg
 
-If you have an official stm32 board, use
+If you have an official stm32 chip, use
 openocd -f /usr/share/openocd/scripts/interface/stlink-v2.cfg -f /usr/share/openocd/scripts/target/stm32f1x.cfg
 
 Use gdb-multiarch or arm-none-eabi-gdb

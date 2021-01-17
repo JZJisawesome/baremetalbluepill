@@ -262,11 +262,9 @@ __start:@Calls __clockInit, initializes memory and jumps to main
     /* Initialize memory sections
      * Note: We do this a word at a time for speed. The linker script word aligns ram sections
      * so we don't have to worry about writing too much/overwriting anything.
-     * This comes at a SRAM cost of a maximum of 3 bytes per section in ram, which is fine.
+     * This comes at a SRAM cost of a maximum of 7 bytes per section in ram, which is fine.
      * Symbols containing the addresses of the sections are defined by the linker script.
     */
-    
-    @TODO speed up by copying/zeroing two words at a time
     
     @Zero out .bss section in SRAM
     ldr r1, =__BSS_BEGIN__@Inclusive
@@ -275,7 +273,7 @@ __start:@Calls __clockInit, initializes memory and jumps to main
 1:@Zeroing loop
     cmp r1, r2
     itt lo@r1 is still within the bss section
-    strlo r0, [r1], 4@Write 0x00000000 at address of r1 and increment index register by 4
+    strdlo r0, r0, [r1], 8@Write 0x0000000000000000 at address of r1 and inc index register by 8
     blo 1b@Repeat loop
     
     @Copy .data section from Flash to SRAM
@@ -285,8 +283,8 @@ __start:@Calls __clockInit, initializes memory and jumps to main
 2:@Copying loop
     cmp r4, r5
     ittt lo@r4 is still within the .data section
-    ldrlo r0, [r3], 4@Load word from Flash and increment Flash index register by 4
-    strlo r0, [r4], 4@Store that word to SRAM and increment SRAM index register by 4
+    ldrdlo r0, r2, [r3], 8@Load two words from Flash and increment Flash index register by 8
+    strdlo r0, r2, [r4], 8@Store those words to SRAM and increment SRAM index register by 8
     blo 2b@Repeat loop
 
     /* Jump to main */
