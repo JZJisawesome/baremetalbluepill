@@ -299,32 +299,34 @@ __ISR_default:
 
 .weak __clockInit@So you can override the initial clocks/peripherals for low power/etc.
 __clockInit:@Sets all clocks to maximum (rated) frequencies and enables clocks for all peripherals
-    @Note: We can use whatever registers we want here because no code is executed before us
+    /* Note: We can use whatever registers we want here because no code is executed before us
+     * Note2: We look at the datasheet for the reset values of registers in order to avoid
+     * having to load their values, or them to set bits, and store them (faster this way).
+    */
     
-    /* Load addresses/constants early (helps out the pipeline a bit maybe) */
+    /* Load addresses/constants early. This potentially helps out the cortex pipeline a bit. */
+    ldr r2, =0x00000032@Constant for setting FLASH_ACR later
     ldr r8, =0x40022000@FLASH_ACR address
     ldr r9, =0x40021000@Base address of RCC control registers
-    ldr r10, =0x00008402@Constant for setting RCC_CFGR later
+    ldr r10, =0x001D8402@Constant for setting RCC_CFGR later
     ldr r7, =0x00000055@Constant for setting RCC_AHBENR later
     ldr r6, =0x00005E7D@Constant for setting RCC_APB2ENR later
     ldr r5, =0x1AE64807@Constant for setting RCC_APB1ENR later
+    ldr r4, =0x001D0000@Constant for setting RCC_CFGR later
+    ldr r3, =0x01010083@Constant for setting RCC_CR later
     
-    /* Set flash latency to two wait states */
-    ldr r2, [r8]@Load current value of FLASH_ACR
-    orr r2, 0x2@Require two wait states because we are going to run at 72MHz
-    str r2, [r8]@Store new value back
+    /* Set flash latency to two wait states (because will are going to run at 72MHz) */
+    str r2, [r8]@Store 0x00000032 to FLASH_ACR
     
     /* Configure clocks/dividers/the pll */
     
     @Configure RCC_CFGR before RCC_CR (PLL settings must be configured before it is enabled)
-    ldr r0, [r9, 0x4]@Load current value of RCC_CFGR
-    orr r0, 0x001D0000@Set PLL mul to 9x (72mhz), HSE to not be divided, and PLL to use the HSE
-    str r0, [r9, 0x4]@Store new value back
+        @Set PLL mul to 9x (72mhz)HSE to not be divided, and PLL to use the HSE
+    str r4, [r9, 0x4]@Store 0x001D0000 to RCC_CFGR
     
     @Configure RCC_CR
-    ldr r1, [r9, 0x0]@Load current value of RCC_CR
-    orr r1, 0x01010101@Enable PLL and HSE (two bits set at bottom make imm valid and do nothing)
-    str r1, [r9, 0x0]@Store new value back
+        @Enable PLL and HSE; leave HSI/trim stuff alone
+    str r3, [r9, 0x0]@Store 0x01010083 to RCC_CR
     
 1:  @Wait for HSE to be stable
     ldr r2, [r9, 0x0]@Load current value of RCC_CR
@@ -337,12 +339,11 @@ __clockInit:@Sets all clocks to maximum (rated) frequencies and enables clocks f
     beq 2b@Loop back if HSE bit is still 0 (if Z flag=1)
 
     @Configure RCC_CFGR after RCC_CR
+        @Leave PLL mul set to 9x (72mhz), HSE to not be divided, and PLL to use the HSE
         @Divide PCLK2 by 6 for ADC (run it at 12mhz which is the highest under the max of 14mhz)
         @Divide APB1 by 2 (maximum of 32mhz)
         @Use PLL as sysclk source
-    ldr r3, [r9, 0x4]@Load current value of RCC_CFGR
-    orr r3, r10@0x00008402
-    str r3, [r9, 0x4]@Store new value back
+    str r10, [r9, 0x4]@Store 0x001D8402 to RCC_CFGR
     
     /* Enable all peripheral clocks */
     str r7, [r9, 0x14]@Enable everything on the AHB bus (RCC_AHBENR)
