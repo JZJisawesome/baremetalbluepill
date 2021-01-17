@@ -91,6 +91,24 @@ extern void __delayInstructions(int32_t number);//MUST BE POSITIVE
 #define UDID_MID (*(volatile uint32_t*)(0x1FFFF7EC))
 #define UDID_HIGH (*(volatile uint32_t*)(0x1FFFF7F0))
 
+//Alternate IO Function Config Registers
+#define AFIO_EVCR (*(volatile uint32_t*)(0x40010000))
+#define AFIO_MAPR (*(volatile uint32_t*)(0x40010004))
+#define AFIO_EXTICR1 (*(volatile uint32_t*)(0x40010008))
+#define AFIO_EXTICR2 (*(volatile uint32_t*)(0x4001000C))
+#define AFIO_EXTICR3 (*(volatile uint32_t*)(0x40010010))
+#define AFIO_EXTICR4 (*(volatile uint32_t*)(0x40010014))
+#define AFIO_MAPR2 (*(volatile uint32_t*)(0x4001001C))
+
+//External Interrupt Config Registers
+//EXTI 0x40014000
+#define EXTI_IMR (*(volatile uint32_t*)(0x40014000))
+#define EXTI_EMR (*(volatile uint32_t*)(0x40014004))
+#define EXTI_RTSR (*(volatile uint32_t*)(0x40014008))
+#define EXTI_FTSR (*(volatile uint32_t*)(0x4001400C))
+#define EXTI_SWIER (*(volatile uint32_t*)(0x40014010))
+#define EXTI_PR (*(volatile uint32_t*)(0x40014014))
+
 //GPIO
 #define GPIOA_CRL (*(volatile uint32_t*)(0x40010800))
 #define GPIOB_CRL (*(volatile uint32_t*)(0x40010C00))
@@ -215,7 +233,7 @@ extern void __delayInstructions(int32_t number);//MUST BE POSITIVE
 #define TIM3_DMAR (*(volatile uint32_t*)(0x4000044C))
 #define TIM4_DMAR (*(volatile uint32_t*)(0x4000084C))
 
-//Cortex Special Sauce Registers
+//Cortex Registers
 //SysTick
 #define SYST_CSR (*(volatile uint32_t*)(0xE000E010))
 #define SYST_RVR (*(volatile uint32_t*)(0xE000E014))

@@ -55,9 +55,6 @@ SECTIONS
         __DATA_END__ = .;
     } > SRAM AT> FLASH
     
-    /* Todo set that up */
-    /**(.text.ram) Can use the .text.ram section in assembly or c to put function into ram */
-    
     .bss : ALIGN(8) /* Align bss to make init code faster at the expense of a few bytes */
     {
         __BSS_BEGIN__ = .;

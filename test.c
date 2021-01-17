@@ -29,6 +29,8 @@ void main()
     __delayInstructions(10000);
     
     GPIOA_CRL = 0x0000bbbb;//Set PA0, PA1, PA2, and PA3 as alternate function 50mhz outputs
+    GPIOB_CRL = 0x00000008;//Set PB0 as input-pulldown/pullup (leaving as pulldown though)
+    GPIOB_CRH = 0x00003000;//Set PB11 as 50mhz output
     GPIOC_CRH = 0x00300000;//Set PC13 and PC14 as 50mhz outputs
     
     /* PWM */
