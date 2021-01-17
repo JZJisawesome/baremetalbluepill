@@ -215,7 +215,4 @@ extern void __delayInstructions(int32_t number);//MUST BE POSITIVE
 #define SYST_CVR (*(volatile uint32_t*)(0xE000E018))
 #define SYST_CALIB (*(volatile uint32_t*)(0xE000E01C))
 
-//Secret
-extern const char __secret[16];
-
 #endif//BLUEPILL_H
