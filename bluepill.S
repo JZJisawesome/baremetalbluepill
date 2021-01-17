@@ -270,9 +270,8 @@ __start://Calls __clockInit, initializes memory and jumps to main
     ldr r0, =0
 1://Loop
     cmp r1, r2
-    ittt lo//r1 is still within the bss section
-    strlo r0, [r1]//Write 0x00000000 at address of r1
-    addlo r1, r1, 4//Increment index register by 4
+    itt lo//r1 is still within the bss section
+    strlo r0, [r1], 4//Write 0x00000000 at address of r1 and increment index register by 4
     blo 1b//Repeat loop
     
     /* Copy .data section from flash to sram */
@@ -281,24 +280,19 @@ __start://Calls __clockInit, initializes memory and jumps to main
     ldr r3, =__DATA_BEGIN_IN_FLASH__//Inclusive
 2://Loop
     cmp r4, r5
-    it hs//r4 is now out of the sram data section
-    bhs 3f//Leave the loop
-    
+    ittt lo//r4 is still within the bss section
     //Copy
-    ldr r0, [r3]//Load word from flash
-    str r0, [r4]//Store word to sram
-    
-    //Increment indexes by 4
-    add r3, r3, 4
-    add r4, r4, 4
-    
-    b 2b//Restart the loop
-3://After loop
+    ldrlo r0, [r3], 4//Load word from flash and increment index register by 4
+    strlo r0, [r4], 4//Store word to sram and increment index register by 4
+    blo 2b//Repeat loop
+
+    //After loop
     
     //Jump to main
     bl main
+    //Fallthrough to default handler if main exits
 
-.thumb_func//The default handler must as well aparently
+.thumb_func
 __ISR_default:
     b __ISR_default//If main returns, spin forever//Also used for unimplemented interupts
     
