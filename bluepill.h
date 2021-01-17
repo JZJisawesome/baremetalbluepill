@@ -74,8 +74,15 @@ typedef unsigned int* uintptr_t;
 extern void __delayInstructions(int32_t number);//MUST BE POSITIVE
 
 /* Intrinsics */
-#define __nop() (__asm__ __volatile__("nop"))
-//__asm__ __volatile__ ("svc 0");
+#define __bkpt(imm_) {__asm__ __volatile__("bkpt "#imm_);}
+#define __dmb {__asm__ __volatile__("dmb");}
+#define __dsb {__asm__ __volatile__("dsb");}
+#define __isb {__asm__ __volatile__("isb");}
+#define __nop() {__asm__ __volatile__("nop");}
+#define __sev() {__asm__ __volatile__("sev");}
+#define __svc(imm_) {__asm__ __volatile__("svc "#imm_);}
+#define __wfe() {__asm__ __volatile__("wfe");}
+#define __wfi() {__asm__ __volatile__("wfi");}
 
 /* MMIO Registers */
 //Device Info Registers

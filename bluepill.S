@@ -266,6 +266,8 @@ __start:@Calls __clockInit, initializes memory and jumps to main
      * Symbols containing the addresses of the sections are defined by the linker script.
     */
     
+    @TODO speed up by copying/zeroing two words at a time
+    
     @Zero out .bss section in SRAM
     ldr r1, =__BSS_BEGIN__@Inclusive
     ldr r2, =__BSS_END__@Exclusive

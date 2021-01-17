@@ -20,8 +20,9 @@
 
 #include "bluepill.h"
 
+//These variable are also neat for testing .bss and .data respectively
 volatile uint32_t systickCount = 0;//Counts up every 1 ms
-volatile uint16_t systickCount1000 = 1;//Counts up every 1 ms; resets to 0 after 999; therefore is equal to given number only once a second
+volatile uint16_t systickCount1000 = 123;//Counts up every 1 ms; resets to 0 after 999; therefore is equal to given number only once a second
 
 void main()
 {
