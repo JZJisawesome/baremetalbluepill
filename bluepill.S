@@ -300,13 +300,14 @@ __ISR_default:
 .weak __clockInit@So you can override the initial clocks/peripherals for low power/etc.
 __clockInit:@Sets all clocks to maximum (rated) frequencies and enables clocks for all peripherals
     @Note: We can use whatever registers we want here because no code is executed before us
-    @Todo: Obey datasheet restrictions and keep reserved bits at reset value
-    @Todo: Also wait for HSE and PLL to be OK before switching over to them
     
     /* Load addresses/constants early (helps out the pipeline a bit maybe) */
     ldr r8, =0x40022000@FLASH_ACR address
     ldr r9, =0x40021000@Base address of RCC control registers
     ldr r10, =0x00008402@Constant for setting RCC_CFGR later
+    ldr r7, =0x00000055@Constant for setting RCC_AHBENR later
+    ldr r6, =0x00005E7D@Constant for setting RCC_APB2ENR later
+    ldr r5, =0x1AE64807@Constant for setting RCC_APB1ENR later
     
     /* Set flash latency to two wait states */
     ldr r2, [r8]@Load current value of FLASH_ACR
@@ -343,15 +344,12 @@ __clockInit:@Sets all clocks to maximum (rated) frequencies and enables clocks f
     orr r3, r10@0x00008402
     str r3, [r9, 0x4]@Store new value back
     
-    /* Enable all peripherals */
-
-    /* Enable clocks for all peripherals */
-    ldr r10, =0xFFFFFFFF@To enable every peripheral
-    str r10, [r9, 0x14]@Enable everything on the AHB bus
-    str r10, [r9, 0x18]@Enable everything on the APB2 bus
-    str r10, [r9, 0x1c]@Enable everything on the APB1 bus
+    /* Enable all peripheral clocks */
+    str r7, [r9, 0x14]@Enable everything on the AHB bus (RCC_AHBENR)
+    str r6, [r9, 0x18]@Enable everything on the APB2 bus (RCC_APB2ENR)
+    str r5, [r9, 0x1c]@Enable everything on the APB1 bus (RCC_APB1ENR)
     
-    bx lr
+    bx lr@Return
 
 /* bluepill.h Functions */
 
