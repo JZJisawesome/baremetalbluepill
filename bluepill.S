@@ -66,7 +66,7 @@
 .cpu cortex-m3
 .thumb
 
-/* ISR Vector Table */
+/* ISR Vector */
 .global __secret
 .section .isr_vector
 @Cortex Interrupts
@@ -130,8 +130,8 @@
 .word __ISR_EXTI15_10
 .word __ISR_RTCAlarm
 .word __ISR_USBWakeup
-@The remaining 17 ISRs that should be in this table do not exist on the STM32F103C8T6,
-@so we save 68 bytes of flash by not including those entries
+@The remaining 17 ISRs that should be in this table do not exist on the STM32F103C8T6, so we
+@save 68 bytes of flash by not including those entries
 
 /* Weak ISR Definitions */
 @Cortex Interrupts
@@ -191,6 +191,7 @@
 .weak __ISR_USBWakeup
 
 /* ISR Aliases */
+@.thumb_set instead of .set so that the lsb is set in the ISR Vector
 @Cortex Interrupts
 .thumb_set __ISR_Reset, __start@Only ISR whose default is not __ISR_default
 .thumb_set __ISR_NMI, __ISR_default
@@ -253,52 +254,49 @@
 .thumb_func@Reset handler must be explicitly specified as thumb apparently with this
 __start:@Calls __clockInit, initializes memory and jumps to main
     @Note: We can use whatever registers we want here because no code is executed before us
-    @We don't need to setup sp because the isr_vector does that for us :)
+    @We don't need to setup sp because the ISR Vector does that for us :)
     
     /* Setup system clocks so that things are fast and peripherals function */
     bl __clockInit
     
-    /* Initialize memory
-     * Note that we do it a word at a time for speed. The linker script word aligns ram sections
-     * so we don't have to worry about writing too much/overwriting anything
+    /* Initialize memory sections
+     * Note: We do this a word at a time for speed. The linker script word aligns ram sections
+     * so we don't have to worry about writing too much/overwriting anything.
+     * This comes at a SRAM cost of a maximum of 3 bytes per section in ram, which is fine.
+     * Symbols containing the addresses of the sections are defined by the linker script.
     */
     
-    /* Zero out bss */
-    @Load start and end addresses
+    @Zero out .bss section in SRAM
     ldr r1, =__BSS_BEGIN__@Inclusive
     ldr r2, =__BSS_END__@Exclusive
-    @Load constant 0
-    ldr r0, =0
-1:@Loop
+    ldr r0, =0x00000000@Constant 0
+1:@Zeroing loop
     cmp r1, r2
     itt lo@r1 is still within the bss section
     strlo r0, [r1], 4@Write 0x00000000 at address of r1 and increment index register by 4
     blo 1b@Repeat loop
     
-    /* Copy .data section from flash to sram */
-    @Load start and end addresses
+    @Copy .data section from Flash to SRAM
     ldr r4, =__DATA_BEGIN__@Inclusive
     ldr r5, =__DATA_END__@Exclusive
     ldr r3, =__DATA_BEGIN_IN_FLASH__@Inclusive
-2:@Loop
+2:@Copying loop
     cmp r4, r5
-    ittt lo@r4 is still within the bss section
-    @Copy
-    ldrlo r0, [r3], 4@Load word from flash and increment index register by 4
-    strlo r0, [r4], 4@Store word to sram and increment index register by 4
+    ittt lo@r4 is still within the .data section
+    ldrlo r0, [r3], 4@Load word from Flash and increment Flash index register by 4
+    strlo r0, [r4], 4@Store that word to SRAM and increment SRAM index register by 4
     blo 2b@Repeat loop
 
-    /* After loop */
-    
-    bl main@Jump to main
+    /* Jump to main */
+    bl main
     @Fallthrough to default handler if main exits
 
 .thumb_func
 __ISR_default:
-    b __ISR_default@If main returns, spin forever@Also used for unimplemented interupts
+    b __ISR_default@If main returns, spin forever@Also used for unimplemented interrupt routines
 
 .weak __clockInit@So you can override the initial clocks/peripherals for low power/etc.
-__clockInit:@Sets all clocks to maximum (rated) frequencies and enables clocks for all peripherals
+__clockInit:@Sets all clocks to maximum (rated) frequencies and enables all peripheral clocks
     /* Note: We can use whatever registers we want here because no code is executed before us
      * Note2: We look at the datasheet for the reset values of registers in order to avoid
      * having to load their values, or them to set bits, and store them (faster this way).
