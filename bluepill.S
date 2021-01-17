@@ -308,27 +308,29 @@ __clockInit:@Sets all clocks to maximum (rated) frequencies and enables clocks f
     /* Load constants common to several blocks of code below */
     ldr r9, =0x40021000@Base address of RCC control registers
     
-    /* Configure RCC_CFGR */
-    @Do not output microcontroller clock
-    @USB clock divide sysclk by 1.5 to get 48MHz
-    @PLL multiplication factor 9 (8MHz crystal * 9 = 72mhz)
-    @Do not divide pll input by 2
-    @Use 8MHz HSE as clock source
-    @Divide PCLK2 by 6 for ADC (which has maximum freq of 14mhz, therefore run at 12mhz)
-    @APB2 clock (PCLK2) do not divide
-    @APB1 clock (PCLK1) divide by 2 (36MHz)
-    @Do not divide with AHB prescaler
-    @Use PLL as sysclk source
+    /* Configure RCC_CFGR (msb to lsb):
+     * Do not output microcontroller clock
+     * USB clock divide sysclk by 1.5 to get 48MHz
+     * PLL multiplication factor 9 (8MHz crystal * 9 = 72mhz)
+     * Do not divide pll input by 2
+     * Use 8MHz HSE as clock source
+     * Divide PCLK2 by 6 for ADC (which has maximum freq of 14mhz, therefore run at 12mhz)
+     * APB2 clock (PCLK2) do not divide
+     * APB1 clock (PCLK1) divide by 2 (36MHz)
+     * Do not divide with AHB prescaler
+     * Use PLL as sysclk source
+    */
     ldr r0, =0b00000000000111011000010000000010
     str r0, [r9, 0x4]@Store to RCC_CFGR
     
-    /* Configure RCC_CR */
-    @Enable PLL
-    @Leave clock security off
-    @Using crystal oscillator, not external clock
-    @Enable HSE
-    @Leave default HSI trim
-    @Leave HSI enabled
+    /* Configure RCC_CR  (msb to lsb):
+     * Enable PLL
+     * Leave clock security off
+     * Using crystal oscillator, not external clock
+     * Enable HSE
+     * Leave default HSI trim
+     * Leave HSI enabled
+    */
     ldr r1, =0b00000001000000010000000010000001
     str r1, [r9, 0x0]@Store to RCC_CR
 
