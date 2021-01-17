@@ -102,12 +102,12 @@ extern void __delayInstructions(int32_t number);//MUST BE POSITIVE
 
 //External Interrupt Config Registers
 //EXTI 0x40014000
-#define EXTI_IMR (*(volatile uint32_t*)(0x40014000))
-#define EXTI_EMR (*(volatile uint32_t*)(0x40014004))
-#define EXTI_RTSR (*(volatile uint32_t*)(0x40014008))
-#define EXTI_FTSR (*(volatile uint32_t*)(0x4001400C))
-#define EXTI_SWIER (*(volatile uint32_t*)(0x40014010))
-#define EXTI_PR (*(volatile uint32_t*)(0x40014014))
+#define EXTI_IMR (*(volatile uint32_t*)(0x40010400))
+#define EXTI_EMR (*(volatile uint32_t*)(0x40010404))
+#define EXTI_RTSR (*(volatile uint32_t*)(0x40010408))
+#define EXTI_FTSR (*(volatile uint32_t*)(0x4001040C))
+#define EXTI_SWIER (*(volatile uint32_t*)(0x40010410))
+#define EXTI_PR (*(volatile uint32_t*)(0x40010414))
 
 //GPIO
 #define GPIOA_CRL (*(volatile uint32_t*)(0x40010800))

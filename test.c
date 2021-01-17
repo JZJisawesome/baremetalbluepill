@@ -61,6 +61,14 @@ void main()
     SYST_CVR = 0;//Reset the counter
     SYST_CSR = 0b011;//Use the "external" HCLK/8=9mhz clock for the counter, enable the __ISR_SysTick interrupt and the counter itself
     
+    /* EXTI */
+    
+    //Todo not working
+    
+    AFIO_EXTICR1 = 0x0001;//Set EXTI0 to use PB0
+    EXTI_RTSR = 0x00000001;//Trigger on the rising edge of PB0
+    EXTI_FTSR = 0x00000001;//Trigger on the falling edge of PB0
+    EXTI_IMR = 0x00000001;//Enable the EXTI0 interrupt
     
     /* Forever loop for more testing */
     
