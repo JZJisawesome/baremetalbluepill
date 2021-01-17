@@ -4,6 +4,9 @@
  * Note: to implement an interrupt handler in assembly, write a global function with the proper name.
  * To implement an interrupt handler in c, write __attribute__ ((interrupt ("IRQ"))) void NAME()
  * where NAME is the proper name of the handler
+ *
+ * Note that you can also override __clockInit, but memory will not be initialized at that point 
+ * so writing in assembly is recommended for that function
 */
 
 @Note: I tried to do this from scratch as much as possible, but needed to look at other sources for certain things
@@ -257,7 +260,8 @@ __start:@Calls __clockInit, initializes memory and jumps to main
     
     /* Initialize memory
      * Note that we do it a word at a time for speed. The linker script word aligns ram sections
-     */
+     * so we don't have to worry about writing too much/overwriting anything
+    */
     
     /* Zero out bss */
     @Load start and end addresses
@@ -283,30 +287,29 @@ __start:@Calls __clockInit, initializes memory and jumps to main
     strlo r0, [r4], 4@Store word to sram and increment index register by 4
     blo 2b@Repeat loop
 
-    @After loop
+    /* After loop */
     
-    @Jump to main
-    bl main
+    bl main@Jump to main
     @Fallthrough to default handler if main exits
 
 .thumb_func
 __ISR_default:
     b __ISR_default@If main returns, spin forever@Also used for unimplemented interupts
-    
+
+.weak __clockInit@So you can override the initial clocks/peripherals for low power/etc.
 __clockInit:@Sets all clocks to maximum (rated) frequencies and enables clocks for all peripherals
     @Note: We can use whatever registers we want here because no code is executed before us
     @Todo: Obey datasheet restrictions and keep reserved bits at reset value
     @Todo: Also wait for HSE and PLL to be OK before switching over to them
     
-    /* Set flash latency to two wait states */
+    /* Load addresses/base addresses to be accessed early (helps out the pipeline a bit) */
     ldr r8, =0x40022000@FLASH_ACR address
-    @Leave prefetch buffer enabled
-    @Require two wait states because we are going to run at 72MHz
-    ldr r2, =0x00000032
-    str r2, [r8]
-    
-    /* Load constants common to several blocks of code below */
     ldr r9, =0x40021000@Base address of RCC control registers
+    
+    /* Set flash latency to two wait states */
+    ldr r2, [r8]@Load current value of FLASH_ACR
+    orr r2, 0x2@Require two wait states because we are going to run at 72MHz
+    str r2, [r8]@Store new value back
     
     /* Configure RCC_CFGR (msb to lsb):
      * Do not output microcontroller clock
