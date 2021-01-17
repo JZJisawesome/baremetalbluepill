@@ -240,4 +240,7 @@ extern void __delayInstructions(int32_t number);//MUST BE POSITIVE
 #define SYST_CVR (*(volatile uint32_t*)(0xE000E018))
 #define SYST_CALIB (*(volatile uint32_t*)(0xE000E01C))
 
+//NVIC
+//0xE000E100 and 0xE000EF00
+
 #endif//BLUEPILL_H

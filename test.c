@@ -68,16 +68,27 @@ void main()
     AFIO_EXTICR1 = 0x0001;//Set EXTI0 to use PB0
     EXTI_RTSR = 0x00000001;//Trigger on the rising edge of PB0
     EXTI_FTSR = 0x00000001;//Trigger on the falling edge of PB0
-    EXTI_IMR = 0x00000001;//Enable the EXTI0 interrupt
+    EXTI_IMR = 0x0000FFFF;//Enable the EXTI0 interrupt
+    (*(volatile uint32_t*)(0xE000E100)) = 0x00000040;//Enable the interrupt
+    
+    //EXTI_SWIER = 0x00000001;//Test interrupt
+    //When either the EXTI_SWIER is set or the button is pushed, EXTI_PR does get set, but it does not do anything for some reason
     
     /* Forever loop for more testing */
     
     while (1)
     {
         
+        
     }
     
     return;//Will fall through to infinite loop if main ever returns
+}
+
+__attribute__ ((interrupt ("IRQ"))) void __ISR_EXTI0()
+{
+    GPIOC_ODR |= 0x00002000;//Set led on
+    (*(volatile uint32_t*)(0xE000E180)) = 0x00000040;//Clear the interrupt flag in the nvic
 }
 
 __attribute__ ((interrupt ("IRQ"))) void __ISR_SysTick()
@@ -93,4 +104,6 @@ __attribute__ ((interrupt ("IRQ"))) void __ISR_SysTick()
         
     /* Test changing pwm every systick */
     TIM2_CCR2 += 50;
+    
+    return;
 }
