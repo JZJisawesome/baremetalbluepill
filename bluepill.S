@@ -276,6 +276,7 @@ __start:@Calls __clockInit, initializes memory and jumps to main
     blo 1b@Repeat loop
     
     /* Copy .data section from flash to sram */
+    @Load start and end addresses
     ldr r4, =__DATA_BEGIN__@Inclusive
     ldr r5, =__DATA_END__@Exclusive
     ldr r3, =__DATA_BEGIN_IN_FLASH__@Inclusive
@@ -302,40 +303,47 @@ __clockInit:@Sets all clocks to maximum (rated) frequencies and enables clocks f
     @Todo: Obey datasheet restrictions and keep reserved bits at reset value
     @Todo: Also wait for HSE and PLL to be OK before switching over to them
     
-    /* Load addresses/base addresses to be accessed early (helps out the pipeline a bit) */
+    /* Load addresses/constants early (helps out the pipeline a bit maybe) */
     ldr r8, =0x40022000@FLASH_ACR address
     ldr r9, =0x40021000@Base address of RCC control registers
+    ldr r10, =0x00008402@Constant for setting RCC_CFGR later
     
     /* Set flash latency to two wait states */
     ldr r2, [r8]@Load current value of FLASH_ACR
     orr r2, 0x2@Require two wait states because we are going to run at 72MHz
     str r2, [r8]@Store new value back
     
-    /* Configure RCC_CFGR (msb to lsb):
-     * Do not output microcontroller clock
-     * USB clock divide sysclk by 1.5 to get 48MHz
-     * PLL multiplication factor 9 (8MHz crystal * 9 = 72mhz)
-     * Do not divide pll input by 2
-     * Use 8MHz HSE as clock source
-     * Divide PCLK2 by 6 for ADC (which has maximum freq of 14mhz, therefore run at 12mhz)
-     * APB2 clock (PCLK2) do not divide
-     * APB1 clock (PCLK1) divide by 2 (36MHz)
-     * Do not divide with AHB prescaler
-     * Use PLL as sysclk source
-    */
-    ldr r0, =0b00000000000111011000010000000010
-    str r0, [r9, 0x4]@Store to RCC_CFGR
+    /* Configure clocks/dividers/the pll */
     
-    /* Configure RCC_CR  (msb to lsb):
-     * Enable PLL
-     * Leave clock security off
-     * Using crystal oscillator, not external clock
-     * Enable HSE
-     * Leave default HSI trim
-     * Leave HSI enabled
-    */
-    ldr r1, =0b00000001000000010000000010000001
-    str r1, [r9, 0x0]@Store to RCC_CR
+    @Configure RCC_CFGR before RCC_CR (PLL settings must be configured before it is enabled)
+    ldr r0, [r9, 0x4]@Load current value of RCC_CFGR
+    orr r0, 0x001D0000@Set PLL mul to 9x (72mhz), HSE to not be divided, and PLL to use the HSE
+    str r0, [r9, 0x4]@Store new value back
+    
+    @Configure RCC_CR
+    ldr r1, [r9, 0x0]@Load current value of RCC_CR
+    orr r1, 0x01010101@Enable PLL and HSE (two bits set at bottom make imm valid and do nothing)
+    str r1, [r9, 0x0]@Store new value back
+    
+1:  @Wait for HSE to be stable
+    ldr r2, [r9, 0x0]@Load current value of RCC_CR
+    tst r2, 0x00020000@Check HSE ready bit (Sets Z flag to 1 if not ready)
+    beq 1b@Loop back if HSE bit is still 0 (if Z flag=1)
+    
+2:  @Wait for PLL to be stable ("locked")
+    ldr r0, [r9, 0x0]@Load current value of RCC_CR
+    tst r0, 0x02000000@Check PLL ready bit (Sets Z flag to 1 if not ready)
+    beq 2b@Loop back if HSE bit is still 0 (if Z flag=1)
+
+    @Configure RCC_CFGR after RCC_CR
+        @Divide PCLK2 by 6 for ADC (run it at 12mhz which is the highest under the max of 14mhz)
+        @Divide APB1 by 2 (maximum of 32mhz)
+        @Use PLL as sysclk source
+    ldr r3, [r9, 0x4]@Load current value of RCC_CFGR
+    orr r3, r10@0x00008402
+    str r3, [r9, 0x4]@Store new value back
+    
+    /* Enable all peripherals */
 
     /* Enable clocks for all peripherals */
     ldr r10, =0xFFFFFFFF@To enable every peripheral
