@@ -24,6 +24,8 @@
 volatile uint32_t systickCount = 0;//Counts up every 1 ms
 volatile uint16_t systickCount1000 = 123;//Counts up every 1 ms; resets to 0 after 999; therefore is equal to given number only once a second
 
+volatile uint8_t times = 0;//Increases each time exti fires
+
 void main()
 {
     __delayInstructions(10000);
@@ -69,10 +71,7 @@ void main()
     EXTI_RTSR = 0x00000001;//Trigger on the rising edge of PB0
     EXTI_FTSR = 0x00000001;//Trigger on the falling edge of PB0
     EXTI_IMR = 0x0000FFFF;//Enable the EXTI0 interrupt
-    (*(volatile uint32_t*)(0xE000E100)) = 0x00000040;//Enable the interrupt
-    
-    //EXTI_SWIER = 0x00000001;//Test interrupt
-    //When either the EXTI_SWIER is set or the button is pushed, EXTI_PR does get set, but it does not do anything for some reason
+    NVIC_ISER0 = 0x00000040;//Enable the interrupt in the nvic
     
     /* Forever loop for more testing */
     
@@ -88,7 +87,9 @@ void main()
 __attribute__ ((interrupt ("IRQ"))) void __ISR_EXTI0()
 {
     GPIOC_ODR |= 0x00002000;//Set led on
-    (*(volatile uint32_t*)(0xE000E180)) = 0x00000040;//Clear the interrupt flag in the nvic
+    EXTI_PR = 0x00000001;//Clear pending bit in peripheral register (set to clear)
+    NVIC_ICPR0 = 0x00000040;//Clear the interrupt flag in the nvic (set to clear)
+    ++times;
 }
 
 __attribute__ ((interrupt ("IRQ"))) void __ISR_SysTick()

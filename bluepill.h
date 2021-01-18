@@ -241,6 +241,39 @@ extern void __delayInstructions(int32_t number);//MUST BE POSITIVE
 #define SYST_CALIB (*(volatile uint32_t*)(0xE000E01C))
 
 //NVIC
-//0xE000E100 and 0xE000EF00
+#define NVIC_ISER0 (*(volatile uint32_t*)(0xE000E100))
+#define NVIC_ISER1 (*(volatile uint32_t*)(0xE000E104))
+
+#define NVIC_ICER0 (*(volatile uint32_t*)(0xE000E180))
+#define NVIC_ICER1 (*(volatile uint32_t*)(0xE000E184))
+
+#define NVIC_ISPR0 (*(volatile uint32_t*)(0xE000E200))
+#define NVIC_ISPR1 (*(volatile uint32_t*)(0xE000E204))
+
+#define NVIC_ICPR0 (*(volatile uint32_t*)(0xE000E280))
+#define NVIC_ICPR1 (*(volatile uint32_t*)(0xE000E284))
+
+#define NVIC_IABR0 (*(volatile uint32_t*)(0xE000E300))
+#define NVIC_IABR1 (*(volatile uint32_t*)(0xE000E304))
+
+#define NVIC_IPR0 (*(volatile uint32_t*)(0xE000E400))
+#define NVIC_IPR1 (*(volatile uint32_t*)(0xE000E404))
+#define NVIC_IPR2 (*(volatile uint32_t*)(0xE000E408))
+#define NVIC_IPR3 (*(volatile uint32_t*)(0xE000E40C))
+#define NVIC_IPR4 (*(volatile uint32_t*)(0xE000E410))
+
+#define NVIC_IPR5 (*(volatile uint32_t*)(0xE000E414))
+#define NVIC_IPR6 (*(volatile uint32_t*)(0xE000E418))
+#define NVIC_IPR7 (*(volatile uint32_t*)(0xE000E41C))
+#define NVIC_IPR8 (*(volatile uint32_t*)(0xE000E420))
+#define NVIC_IPR9 (*(volatile uint32_t*)(0xE000E424))
+#define NVIC_IPR10 (*(volatile uint32_t*)(0xE000E428))
+
+#define NVIC_STIR (*(volatile uint32_t*)(0xE000EF00))
+
+//SCB
+#define SCB_ACTLR (*(volatile uint32_t*)(0xE000E008))
+#define SCB_CPUID (*(volatile uint32_t*)(0xE000ED00))//Should be 0x411FC231; clone is 0x412FC231
+//todo the rest
 
 #endif//BLUEPILL_H
