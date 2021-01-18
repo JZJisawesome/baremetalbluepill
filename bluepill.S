@@ -292,6 +292,7 @@ __start:@Calls __clockInit, initializes memory and jumps to main
     @Fallthrough to default handler if main exits
 
 .thumb_func
+.weak __ISR_default@Can even reimplement __ISR_default
 __ISR_default:
     b __ISR_default@If main returns, spin forever@Also used for unimplemented interrupt routines
 

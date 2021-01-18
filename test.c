@@ -26,26 +26,34 @@ volatile uint16_t systickCount1000 = 123;//Counts up every 1 ms; resets to 0 aft
 
 volatile uint8_t times = 0;//Increases each time exti fires
 
+void pwmstuffs();
+void setupSystick();
+void extistuffs();
+
 void main()
 {
-    __delayInstructions(10000);
+    //__delayInstructions(10000);
+    
+    //Setup gpio
     
     GPIOA_CRL = 0x0000bbbb;//Set PA0, PA1, PA2, and PA3 as alternate function 50mhz outputs
     GPIOB_CRL = 0x00000008;//Set PB0 as input-pulldown/pullup (leaving as pulldown though)
     GPIOB_CRH = 0x00003000;//Set PB11 as 50mhz output
     GPIOC_CRH = 0x00300000;//Set PC13 and PC14 as 50mhz outputs
     
-    /* PWM */
+    pwmstuffs();
+    setupSystick();
+    extistuffs();
     
-    //Todo debug why none of this (the pwm) seems to work anymore
-    //For some reason TIM_CR1 does not write in either instance
-    //Compiler is just not generating code for either assignmnet
-    
+    return;
+}
+
+void pwmstuffs()
+{
     TIM2_PSC = 0;//72Mhz
     TIM2_CCMR1 = 0x6868;//Enable PWM mode 1 on timer 2 channel 1+2 as well as preload enable
     TIM2_CCMR2 = 0x6868;//Enable PWM mode 1 on timer 2 channel 3+4 as well as preload enable
     TIM2_CR1 = 0x0080;//Enable TIM2_ARR preload
-    //(*(volatile uint32_t*)(0x40000000)) = 0x0080;
     TIM2_ARR = 0xFFFF;//Use all of the bits of the counter
     
     TIM2_CCR1 = 0x7FFF;//50% duty cycle on channel 1
@@ -56,33 +64,25 @@ void main()
     TIM2_EGR |= 0x0001;//Generate update event to copy TIM2_PSC, TIM_ARR, and TIM2_CCRx into actual (shadow) registers
     TIM2_CR1 |= 0x0001;//Enable counter (upcounting)
     TIM2_CCER = 0x1111;//Enable channel outputs (non-inverted polarity)
-    
-    /* SysTick */
-    
+}
+
+void setupSystick()
+{
     SYST_RVR = 9000;//1000hz tick speed
     SYST_CVR = 0;//Reset the counter
     SYST_CSR = 0b011;//Use the "external" HCLK/8=9mhz clock for the counter, enable the __ISR_SysTick interrupt and the counter itself
-    
-    /* EXTI */
-    
-    //Todo not working
-    
+}
+
+void extistuffs()
+{
     AFIO_EXTICR1 = 0x0001;//Set EXTI0 to use PB0
     EXTI_RTSR = 0x00000001;//Trigger on the rising edge of PB0
     EXTI_FTSR = 0x00000001;//Trigger on the falling edge of PB0
     EXTI_IMR = 0x0000FFFF;//Enable the EXTI0 interrupt
     NVIC_ISER0 = 0x00000040;//Enable the interrupt in the nvic
-    
-    /* Forever loop for more testing */
-    
-    while (1)
-    {
-        
-        
-    }
-    
-    return;//Will fall through to infinite loop if main ever returns
 }
+
+/* Testing Various interrupts */
 
 __attribute__ ((interrupt ("IRQ"))) void __ISR_EXTI0()
 {
