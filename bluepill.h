@@ -71,6 +71,11 @@ typedef unsigned int* uintptr_t;
 
 /* Useful functions */
 extern void __delayInstructions(int32_t number);//MUST BE POSITIVE
+extern void __delayInstructionsV2(uint32_t instructions);
+
+/* Useful macros */
+
+#define __reset() {SCB_AIRCR = 0x05FA0004;}//Todo try make this an actual function (in assembly)
 
 /* Intrinsics */
 #define __bkpt(imm_) {__asm__ __volatile__("bkpt "#imm_);}
@@ -249,10 +254,27 @@ extern void __delayInstructions(int32_t number);//MUST BE POSITIVE
 #define FLASH_OBR (*(volatile uint32_t*)(0x4002201C))
 #define FLASH_WRPR (*(volatile uint32_t*)(0x40022020))
 
+//RTC
+//0x40002800
+#define RTC_CRH (*(volatile uint32_t*)(0x40002800))
+#define RTC_CRL (*(volatile uint32_t*)(0x40002804))
+#define RTC_PRLH (*(volatile uint32_t*)(0x40002808))
+#define RTC_PRLL (*(volatile uint32_t*)(0x4000280C))
+#define RTC_DIVH (*(volatile uint32_t*)(0x40002810))
+#define RTC_DIVL (*(volatile uint32_t*)(0x40002814))
+#define RTC_CNTH (*(volatile uint32_t*)(0x40002818))
+#define RTC_CNTL (*(volatile uint32_t*)(0x4000281C))
+#define RTC_ALRH (*(volatile uint32_t*)(0x40002820))
+#define RTC_ALRL (*(volatile uint32_t*)(0x40002824))
+
 //CRC
 #define CRC_DR (*(volatile uint32_t*)(0x40023000))
 #define CRC_IDR (*(volatile uint32_t*)(0x40023004))
 #define CRC_CR (*(volatile uint32_t*)(0x40023008))
+
+//Power Control
+#define PWR_CR (*(volatile uint32_t*)(0x40007000))
+#define PWR_CSR (*(volatile uint32_t*)(0x40007004))
 
 //Cortex Registers
 //SysTick

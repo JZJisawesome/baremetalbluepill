@@ -32,7 +32,7 @@ void extistuffs();
 
 void main()
 {
-    __delayInstructions(10000);
+    __delayInstructionsV2(10000);
     
     //Setup gpio
     

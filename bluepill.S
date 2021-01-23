@@ -85,7 +85,7 @@
 .global __delayInstructions@Takes up 12 bytes
 __delayInstructions:@int32_t cycles
     sub r0, r0, 3@sub, cmp, and bgt
-    cmp r0, 0
+    cmp r0, 0@TODO JUST USE SUB TO UPDATE FLAGS FOR BGT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     bgt __delayInstructions@Keep looping if cycles is still > 0
     bx lr@Return
 .word 0x00000000@Reserved (unused bytes)
@@ -365,4 +365,10 @@ __clockInit:@Sets all clocks to maximum (rated) frequencies and enables all peri
     str r6, [r9, 0x18]@Enable everything on the APB2 bus (RCC_APB2ENR)
     str r5, [r9, 0x1c]@Enable everything on the APB1 bus (RCC_APB1ENR)
     
+    bx lr@Return
+
+.global __delayInstructionsV2
+__delayInstructionsV2:@uint32_t instructions
+    subs r0, 2@sub and bcs instructions (also update condition flags)
+    bcs __delayInstructionsV2@Keep looping if underflow didn't occur (C=1)
     bx lr@Return
