@@ -342,4 +342,8 @@ extern void __delayInstructions(uint32_t numberOfInstructions);
 #define SCB_MMAR (*(volatile uint32_t*)(0xE000ED34))
 #define SCB_BFAR (*(volatile uint32_t*)(0xE000ED38))
 
+//Debug Registers
+#define DBGMCU_IDCODE  (*(volatile uint32_t*)(0xE0042000))
+#define DBGMCU_CR  (*(volatile uint32_t*)(0xE0042004))
+
 #endif//BLUEPILL_H

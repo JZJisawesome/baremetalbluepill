@@ -35,13 +35,11 @@ SECTIONS
     /* Read only things */
     .text :
     {
-        KEEP(*(.isr_vector))
-        *(.text)
-    } > FLASH
-    
-    .rodata :
-    {
-        *(.rodata)
+        KEEP(*(.isr_vector)) /* TODO figure out why if this is put in its own output section, even with KEEP, the section is still discarded*/
+        KEEP(*(.init))
+        *(.text*)
+        *(.rodata*)
+        
     } > FLASH
     
     /* R/W things/things in ram */
@@ -60,5 +58,5 @@ SECTIONS
         __BSS_BEGIN__ = .;
         *(.bss)
         __BSS_END__ = .;
-    } > SRAM /* Can go directly into SRAM because it is not initialized */
+    } > SRAM /* Can go directly into SRAM because it is not initialized (just zeroed) */
 }

@@ -70,7 +70,6 @@
 .thumb
 
 /* ISR Vector */
-.global __secret
 .section .isr_vector
 @Cortex Interrupts
 .word __stack_top@From linker script
@@ -263,7 +262,7 @@ __delayInstructions:@uint32_t numberOfInstructions
 
 /* Init Code */
 
-.section .text
+.section .init
 .global __start
 .thumb_func@Reset handler must be explicitly specified as thumb apparently with this
 __start:@Calls __clockInit, initializes memory and jumps to main
@@ -320,15 +319,15 @@ __clockInit:@Sets all clocks to maximum (rated) frequencies and enables all peri
     */
     
     /* Load addresses/constants early. This potentially helps out the cortex pipeline a bit. */
-    ldr r2, =0x00000032@Constant for setting FLASH_ACR later
-    ldr r8, =0x40022000@FLASH_ACR address
-    ldr r9, =0x40021000@Base address of RCC control registers
-    ldr r10, =0x001D8402@Constant for setting RCC_CFGR later
-    ldr r7, =0x00000055@Constant for setting RCC_AHBENR later
-    ldr r6, =0x00005E7D@Constant for setting RCC_APB2ENR later
-    ldr r5, =0x1AE64807@Constant for setting RCC_APB1ENR later
-    ldr r4, =0x001D0000@Constant for setting RCC_CFGR later
-    ldr r3, =0x01010083@Constant for setting RCC_CR later
+    ldr r2,     =0x00000032@Constant for setting FLASH_ACR later
+    ldr r8,     =0x40022000@FLASH_ACR address
+    ldr r9,     =0x40021000@Base address of RCC control registers
+    ldr r10,    =0x001D8402@Constant for setting RCC_CFGR later
+    ldr r7,     =0x00000055@Constant for setting RCC_AHBENR later
+    ldr r6,     =0x00005E7D@Constant for setting RCC_APB2ENR later
+    ldr r5,     =0x1AE64807@Constant for setting RCC_APB1ENR later
+    ldr r4,     =0x001D0000@Constant for setting RCC_CFGR later
+    ldr r3,     =0x01010083@Constant for setting RCC_CR later
     
     /* Set flash latency to two wait states (because will are going to run at 72MHz) */
     str r2, [r8]@Store 0x00000032 to FLASH_ACR
