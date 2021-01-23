@@ -111,7 +111,26 @@ extern void __delayInstructions(uint32_t numberOfInstructions);
 #define UDID_MID (*(volatile uint32_t*)(0x1FFFF7EC))
 #define UDID_HIGH (*(volatile uint32_t*)(0x1FFFF7F0))
 
-//Alternate IO Function Config Registers
+//RTC (Base: 0x40002800)
+#define RTC_CRH (*(volatile uint32_t*)(0x40002800))
+#define RTC_CRL (*(volatile uint32_t*)(0x40002804))
+#define RTC_PRLH (*(volatile uint32_t*)(0x40002808))
+#define RTC_PRLL (*(volatile uint32_t*)(0x4000280C))
+#define RTC_DIVH (*(volatile uint32_t*)(0x40002810))
+#define RTC_DIVL (*(volatile uint32_t*)(0x40002814))
+#define RTC_CNTH (*(volatile uint32_t*)(0x40002818))
+#define RTC_CNTL (*(volatile uint32_t*)(0x4000281C))
+#define RTC_ALRH (*(volatile uint32_t*)(0x40002820))
+#define RTC_ALRL (*(volatile uint32_t*)(0x40002824))
+
+//Backup Registers (Base: 0x40006C00)
+//TODO
+
+//Power Control (Base: 0x40007000)
+#define PWR_CR (*(volatile uint32_t*)(0x40007000))
+#define PWR_CSR (*(volatile uint32_t*)(0x40007004))
+
+//Alternate IO Function Config Registers (Base: 0x40010000)
 #define AFIO_EVCR (*(volatile uint32_t*)(0x40010000))
 #define AFIO_MAPR (*(volatile uint32_t*)(0x40010004))
 #define AFIO_EXTICR1 (*(volatile uint32_t*)(0x40010008))
@@ -120,7 +139,7 @@ extern void __delayInstructions(uint32_t numberOfInstructions);
 #define AFIO_EXTICR4 (*(volatile uint32_t*)(0x40010014))
 #define AFIO_MAPR2 (*(volatile uint32_t*)(0x4001001C))
 
-//External Interrupt Config Registers
+//External Interrupt Config Registers (Base: 0x40010400)
 #define EXTI_IMR (*(volatile uint32_t*)(0x40010400))
 #define EXTI_EMR (*(volatile uint32_t*)(0x40010404))
 #define EXTI_RTSR (*(volatile uint32_t*)(0x40010408))
@@ -128,7 +147,7 @@ extern void __delayInstructions(uint32_t numberOfInstructions);
 #define EXTI_SWIER (*(volatile uint32_t*)(0x40010410))
 #define EXTI_PR (*(volatile uint32_t*)(0x40010414))
 
-//GPIO
+//GPIO (Bases: A:0x40010800 B:0x40010C00 C:0x40011000)
 #define GPIOA_CRL (*(volatile uint32_t*)(0x40010800))
 #define GPIOB_CRL (*(volatile uint32_t*)(0x40010C00))
 #define GPIOC_CRL (*(volatile uint32_t*)(0x40011000))
@@ -157,7 +176,10 @@ extern void __delayInstructions(uint32_t numberOfInstructions);
 #define GPIOB_LCKR (*(volatile uint32_t*)(0x40010C18))
 #define GPIOC_LCKR (*(volatile uint32_t*)(0x40011018))
 
-//Timers
+//ADC (Bases: 1:0x40012400 2:0x40012800)
+//TODO
+
+//Timers (Bases: 1:0x40012C00 2:0x40000000 3:0x40000400 4:0x40000800)
 #define TIM1_CR1 (*(volatile uint32_t*)(0x40012C00))
 #define TIM2_CR1 (*(volatile uint32_t*)(0x40000000))
 #define TIM3_CR1 (*(volatile uint32_t*)(0x40000400))
@@ -173,10 +195,10 @@ extern void __delayInstructions(uint32_t numberOfInstructions);
 #define TIM3_SMCR (*(volatile uint32_t*)(0x40000408))
 #define TIM4_SMCR (*(volatile uint32_t*)(0x40000808))
 
-#define TIM1_DIER (*(volatile uint32_t*)(0x40012C0c))
-#define TIM2_DIER (*(volatile uint32_t*)(0x4000000c))
-#define TIM3_DIER (*(volatile uint32_t*)(0x4000040c))
-#define TIM4_DIER (*(volatile uint32_t*)(0x4000080c))
+#define TIM1_DIER (*(volatile uint32_t*)(0x40012C0C))
+#define TIM2_DIER (*(volatile uint32_t*)(0x4000000C))
+#define TIM3_DIER (*(volatile uint32_t*)(0x4000040C))
+#define TIM4_DIER (*(volatile uint32_t*)(0x4000080C))
 
 #define TIM1_SR (*(volatile uint32_t*)(0x40012C10))
 #define TIM2_SR (*(volatile uint32_t*)(0x40000010))
@@ -252,46 +274,49 @@ extern void __delayInstructions(uint32_t numberOfInstructions);
 #define TIM3_DMAR (*(volatile uint32_t*)(0x4000044C))
 #define TIM4_DMAR (*(volatile uint32_t*)(0x4000084C))
 
-//DMA
-#define DMA_ISR (*(volatile uint32_t*)(0x40012000))
-#define DMA_IFCR (*(volatile uint32_t*)(0x40012004))
+//SPI (Bases: 1:0x40013000 2:0x40003800)
+//TODO
 
-#define DMA_CCR1 (*(volatile uint32_t*)(0x40012008))
-#define DMA_CNDTR1 (*(volatile uint32_t*)(0x4001200C))
-#define DMA_CPAR1 (*(volatile uint32_t*)(0x40012010))
-#define DMA_CMAR1 (*(volatile uint32_t*)(0x40012014))
+//DMA (Base: 0x40020000)
+#define DMA_ISR (*(volatile uint32_t*)(0x40020000))
+#define DMA_IFCR (*(volatile uint32_t*)(0x40020004))
 
-#define DMA_CCR2 (*(volatile uint32_t*)(0x4001201C))
-#define DMA_CNDTR2 (*(volatile uint32_t*)(0x40012020))
-#define DMA_CPAR2 (*(volatile uint32_t*)(0x40012024))
-#define DMA_CMAR2 (*(volatile uint32_t*)(0x40012028))
+#define DMA_CCR1 (*(volatile uint32_t*)(0x40020008))
+#define DMA_CNDTR1 (*(volatile uint32_t*)(0x4002000C))
+#define DMA_CPAR1 (*(volatile uint32_t*)(0x40020010))
+#define DMA_CMAR1 (*(volatile uint32_t*)(0x40020014))
 
-#define DMA_CCR3 (*(volatile uint32_t*)(0x40012030))
-#define DMA_CNDTR3 (*(volatile uint32_t*)(0x40012034))
-#define DMA_CPAR3 (*(volatile uint32_t*)(0x40012038))
-#define DMA_CMAR3 (*(volatile uint32_t*)(0x4001203C))
+#define DMA_CCR2 (*(volatile uint32_t*)(0x4002001C))
+#define DMA_CNDTR2 (*(volatile uint32_t*)(0x40020020))
+#define DMA_CPAR2 (*(volatile uint32_t*)(0x40020024))
+#define DMA_CMAR2 (*(volatile uint32_t*)(0x40020028))
 
-#define DMA_CCR4 (*(volatile uint32_t*)(0x40012044))
-#define DMA_CNDTR4 (*(volatile uint32_t*)(0x40012048))
-#define DMA_CPAR4 (*(volatile uint32_t*)(0x4001204C))
-#define DMA_CMAR4 (*(volatile uint32_t*)(0x40012050))
+#define DMA_CCR3 (*(volatile uint32_t*)(0x40020030))
+#define DMA_CNDTR3 (*(volatile uint32_t*)(0x40020034))
+#define DMA_CPAR3 (*(volatile uint32_t*)(0x40020038))
+#define DMA_CMAR3 (*(volatile uint32_t*)(0x4002003C))
 
-#define DMA_CCR5 (*(volatile uint32_t*)(0x40012058))
-#define DMA_CNDTR5 (*(volatile uint32_t*)(0x4001205C))
-#define DMA_CPAR5 (*(volatile uint32_t*)(0x40012060))
-#define DMA_CMAR5 (*(volatile uint32_t*)(0x40012064))
+#define DMA_CCR4 (*(volatile uint32_t*)(0x40020044))
+#define DMA_CNDTR4 (*(volatile uint32_t*)(0x40020048))
+#define DMA_CPAR4 (*(volatile uint32_t*)(0x4002004C))
+#define DMA_CMAR4 (*(volatile uint32_t*)(0x40020050))
 
-#define DMA_CCR6 (*(volatile uint32_t*)(0x4001206C))
-#define DMA_CNDTR6 (*(volatile uint32_t*)(0x40012070))
-#define DMA_CPAR6 (*(volatile uint32_t*)(0x40012074))
-#define DMA_CMAR6 (*(volatile uint32_t*)(0x40012078))
+#define DMA_CCR5 (*(volatile uint32_t*)(0x40020058))
+#define DMA_CNDTR5 (*(volatile uint32_t*)(0x4002005C))
+#define DMA_CPAR5 (*(volatile uint32_t*)(0x40020060))
+#define DMA_CMAR5 (*(volatile uint32_t*)(0x40020064))
 
-#define DMA_CCR7 (*(volatile uint32_t*)(0x40012080))
-#define DMA_CNDTR7 (*(volatile uint32_t*)(0x40012084))
-#define DMA_CPAR7 (*(volatile uint32_t*)(0x40012088))
-#define DMA_CMAR7 (*(volatile uint32_t*)(0x4001208C))
+#define DMA_CCR6 (*(volatile uint32_t*)(0x4002006C))
+#define DMA_CNDTR6 (*(volatile uint32_t*)(0x40020070))
+#define DMA_CPAR6 (*(volatile uint32_t*)(0x40020074))
+#define DMA_CMAR6 (*(volatile uint32_t*)(0x40020078))
 
-//Flash Memory Interface
+#define DMA_CCR7 (*(volatile uint32_t*)(0x40020080))
+#define DMA_CNDTR7 (*(volatile uint32_t*)(0x40020084))
+#define DMA_CPAR7 (*(volatile uint32_t*)(0x40020088))
+#define DMA_CMAR7 (*(volatile uint32_t*)(0x4002008C))
+
+//Flash Memory Interface (Base: 0x40022000)
 #define FLASH_ACR (*(volatile uint32_t*)(0x40022000))
 #define FLASH_KEYR (*(volatile uint32_t*)(0x40022004))
 #define FLASH_OPTKEYR (*(volatile uint32_t*)(0x40022008))
@@ -301,26 +326,10 @@ extern void __delayInstructions(uint32_t numberOfInstructions);
 #define FLASH_OBR (*(volatile uint32_t*)(0x4002201C))
 #define FLASH_WRPR (*(volatile uint32_t*)(0x40022020))
 
-//RTC
-#define RTC_CRH (*(volatile uint32_t*)(0x40002800))
-#define RTC_CRL (*(volatile uint32_t*)(0x40002804))
-#define RTC_PRLH (*(volatile uint32_t*)(0x40002808))
-#define RTC_PRLL (*(volatile uint32_t*)(0x4000280C))
-#define RTC_DIVH (*(volatile uint32_t*)(0x40002810))
-#define RTC_DIVL (*(volatile uint32_t*)(0x40002814))
-#define RTC_CNTH (*(volatile uint32_t*)(0x40002818))
-#define RTC_CNTL (*(volatile uint32_t*)(0x4000281C))
-#define RTC_ALRH (*(volatile uint32_t*)(0x40002820))
-#define RTC_ALRL (*(volatile uint32_t*)(0x40002824))
-
-//CRC
+//CRC (Base: 0x40023000)
 #define CRC_DR (*(volatile uint32_t*)(0x40023000))
 #define CRC_IDR (*(volatile uint32_t*)(0x40023004))
 #define CRC_CR (*(volatile uint32_t*)(0x40023008))
-
-//Power Control
-#define PWR_CR (*(volatile uint32_t*)(0x40007000))
-#define PWR_CSR (*(volatile uint32_t*)(0x40007004))
 
 //Cortex Registers
 //SysTick
@@ -366,7 +375,7 @@ extern void __delayInstructions(uint32_t numberOfInstructions);
 
 #define NVIC_STIR (*(volatile uint32_t*)(0xE000EF00))
 
-//SCB (System Control Block)
+//SCB (System Control Block) (most have base of 0xE000ED00; SCB_ACTLR is the exception)
 #define SCB_ACTLR (*(volatile uint32_t*)(0xE000E008))
 #define SCB_CPUID (*(volatile uint32_t*)(0xE000ED00))//Should be 0x411FC231; clone is 0x412FC231
 #define SCB_ICSR (*(volatile uint32_t*)(0xE000ED04))
@@ -383,7 +392,7 @@ extern void __delayInstructions(uint32_t numberOfInstructions);
 #define SCB_MMAR (*(volatile uint32_t*)(0xE000ED34))
 #define SCB_BFAR (*(volatile uint32_t*)(0xE000ED38))
 
-//Debug Registers
+//Debug Registers (Base: 0xE0042000)
 #define DBGMCU_IDCODE  (*(volatile uint32_t*)(0xE0042000))
 #define DBGMCU_CR  (*(volatile uint32_t*)(0xE0042004))
 
