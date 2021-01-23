@@ -11,55 +11,58 @@
 
 @Note: I tried to do this from scratch as much as possible, but needed to look at other sources for certain things
 
-/* Licencing */
-/***Copyright 2021 John Jekel
-  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
-  * and associated documentation files (the "Software"), to deal in the Software without
-  * restriction, including without limitation the rights to use, copy, modify, merge, publish,
-  * distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the
-  * Software is furnished to do so, subject to the following conditions:
-  * 
-  * The above copyright notice and this permission notice shall be included in all copies or
-  * substantial portions of the Software.
-  * 
-  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
-  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-  *
+/* Licensing
+ *
+****Copyright 2021 John Jekel
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+ * and associated documentation files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+ * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
 ****Referenced code from: https:@github.com/RickKimball/fabooh/blob/master/board/bluepill/startup_stm32.s
-  *For the following things: initializing memory, how to do weak aliases, 
-  *idea to fallthrough to default ISR handler from __start, other small things
-  *
-  * <h2><center>&copy; COPYRIGHT(c) 2016 STMicroelectronics</center></h2>
-  *
-  * Redistribution and use in source and binary forms, with or without modification,
-  * are permitted provided that the following conditions are met:
-  *   1. Redistributions of source code must retain the above copyright notice,
-  *      this list of conditions and the following disclaimer.
-  *   2. Redistributions in binary form must reproduce the above copyright notice,
-  *      this list of conditions and the following disclaimer in the documentation
-  *      and/or other materials provided with the distribution.
-  *   3. Neither the name of STMicroelectronics nor the names of its contributors
-  *      may be used to endorse or promote products derived from this software
-  *      without specific prior written permission.
-  *
-  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-  *
-  * ^1 - rrk modified code to use IT blocks
-  *
-  * I also looked a bit at stm32duino code and various other things on the internet
+ *For the following things: initializing memory, how to do weak aliases, 
+ *idea to fallthrough to default ISR handler from __start, other small things
+ *
+ * <h2><center>&copy; COPYRIGHT(c) 2016 STMicroelectronics</center></h2>
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *  1. Redistributions of source code must retain the above copyright notice,
+ *     this list of conditions and the following disclaimer.
+ *  2. Redistributions in binary form must reproduce the above copyright notice,
+ *     this list of conditions and the following disclaimer in the documentation
+ *     and/or other materials provided with the distribution.
+ *  3. Neither the name of STMicroelectronics nor the names of its contributors
+ *     may be used to endorse or promote products derived from this software
+ *     without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * ^1 - rrk modified code to use IT blocks
+ *
+ * I also looked a bit at stm32duino code and various other things (stackoverflow, etc.)
 */
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 /* Use Arm unified syntax and the thumb instruction set for the Arm Cortex M3 */
 .syntax unified
@@ -77,13 +80,20 @@
 .word __ISR_MemManage
 .word __ISR_BusFault
 .word __ISR_UsageFault
-.word 0x694A5A4A@Reserved; leaving a fun hidden message here
-.word 0x65776173@Reserved; leaving a fun hidden message here
-.word 0x656D6F73@Reserved; leaving a fun hidden message here
-.word 0x00293A20@Reserved; leaving a fun hidden message here
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@The next 16 bytes are unused (reserved). Put a useful function here instead of wasting flash
+.global __delayInstructions@Takes up 12 bytes
+__delayInstructions:@int32_t cycles
+    sub r0, r0, 3@sub, cmp, and bgt
+    cmp r0, 0
+    bgt __delayInstructions@Keep looping if cycles is still > 0
+    bx lr@Return
+.word 0x00000000@Reserved (unused bytes)
+@Continue with the vector table
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 .word __ISR_SVCall
 .word __ISR_Debug_Monitor
-.word 0@Reserved
+.asciz "JZJ"@Reserved; leaving a fun message here (3 bytes + 1 null byte = 1 word)
 .word __ISR_PendSV
 .word __ISR_SysTick
 @Peripheral Interrupts
@@ -131,9 +141,10 @@
 .word __ISR_RTCAlarm
 .word __ISR_USBWakeup
 @The remaining 17 ISRs that should be in this table do not exist on the STM32F103C8T6, so we
-@save 68 bytes of flash by not including those entries
+@save 68 bytes of flash by simply not including those entries
 
 /* Weak ISR Definitions */
+@Allow these handlers to be overridden by user code
 @Cortex Interrupts
 .weak __ISR_Reset
 .weak __ISR_NMI
@@ -191,7 +202,7 @@
 .weak __ISR_USBWakeup
 
 /* ISR Aliases */
-@.thumb_set instead of .set so that the lsb is set in the ISR Vector
+@.thumb_set instead of .set so that the lsb is set in the ISR Vector, even if overridden
 @Cortex Interrupts
 .thumb_set __ISR_Reset, __start@Only ISR whose default is not __ISR_default
 .thumb_set __ISR_NMI, __ISR_default
@@ -248,7 +259,10 @@
 .thumb_set __ISR_RTCAlarm, __ISR_default
 .thumb_set __ISR_USBWakeup, __ISR_default
 
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
 /* Init Code */
+
 .section .text
 .global __start
 .thumb_func@Reset handler must be explicitly specified as thumb apparently with this
@@ -291,10 +305,12 @@ __start:@Calls __clockInit, initializes memory and jumps to main
     bl main
     @Fallthrough to default handler if main exits
 
+    
 .thumb_func
-.weak __ISR_default@Can even reimplement __ISR_default
+.weak __ISR_default@Can even re-implement __ISR_default if you want
 __ISR_default:
     b __ISR_default@If main returns, spin forever@Also used for unimplemented interrupt routines
+
 
 .weak __clockInit@So you can override the initial clocks/peripherals for low power/etc.
 __clockInit:@Sets all clocks to maximum (rated) frequencies and enables all peripheral clocks
@@ -348,15 +364,5 @@ __clockInit:@Sets all clocks to maximum (rated) frequencies and enables all peri
     str r7, [r9, 0x14]@Enable everything on the AHB bus (RCC_AHBENR)
     str r6, [r9, 0x18]@Enable everything on the APB2 bus (RCC_APB2ENR)
     str r5, [r9, 0x1c]@Enable everything on the APB1 bus (RCC_APB1ENR)
-    
-    bx lr@Return
-
-/* bluepill.h Functions */
-
-.global __delayInstructions
-__delayInstructions:@int32_t cycles
-    sub r0, r0, 3@sub, cmp, and bgt
-    cmp r0, 0
-    bgt __delayInstructions@Keep looping if cycles is still > 0
     
     bx lr@Return

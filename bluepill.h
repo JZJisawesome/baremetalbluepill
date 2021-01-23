@@ -1,19 +1,19 @@
 /***Copyright 2021 John Jekel
-  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
-  * and associated documentation files (the "Software"), to deal in the Software without
-  * restriction, including without limitation the rights to use, copy, modify, merge, publish,
-  * distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the
-  * Software is furnished to do so, subject to the following conditions:
-  * 
-  * The above copyright notice and this permission notice shall be included in all copies or
-  * substantial portions of the Software.
-  * 
-  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
-  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-  *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+ * and associated documentation files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+ * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
 */
 
 /* Useful single header library for the blue pill devboard */
@@ -70,7 +70,6 @@ typedef unsigned int* uintptr_t;
 #define __bool_true_false_are_defined 1
 
 /* Useful functions */
-//Implemented by crt0.s and bluepill.c
 extern void __delayInstructions(int32_t number);//MUST BE POSITIVE
 
 /* Intrinsics */
@@ -101,7 +100,6 @@ extern void __delayInstructions(int32_t number);//MUST BE POSITIVE
 #define AFIO_MAPR2 (*(volatile uint32_t*)(0x4001001C))
 
 //External Interrupt Config Registers
-//EXTI 0x40014000
 #define EXTI_IMR (*(volatile uint32_t*)(0x40010400))
 #define EXTI_EMR (*(volatile uint32_t*)(0x40010404))
 #define EXTI_RTSR (*(volatile uint32_t*)(0x40010408))
