@@ -16,8 +16,8 @@
  *
 */
 
-/* Useful single header library for the blue pill devboard */
-//Provides things implemented by bluepill.c and bluepillasm.S
+/* Useful library for the blue pill devboard */
+//Provides things implemented by bluepill.S, MMIO pointers/registers, datatypes and more
 
 #ifndef BLUEPILL_H
 #define BLUEPILL_H
@@ -69,13 +69,19 @@ typedef unsigned int* uintptr_t;
 #define false 0
 #define __bool_true_false_are_defined 1
 
+#ifdef NDEBUG
+    #define assert(condition) ((void)0)
+#else//Spin forever if assertion fails (allows debugger to be used)
+    #define assert(condition) {if (condition == 0) __hang();}
+#endif
+
 /* Useful functions */
-extern void __delayInstructions(int32_t number);//MUST BE POSITIVE
-extern void __delayInstructionsV2(uint32_t instructions);
+extern void __delayInstructions(uint32_t numberOfInstructions);
 
 /* Useful macros */
 
-#define __reset() {SCB_AIRCR = 0x05FA0004;}//Todo try make this an actual function (in assembly)
+#define __hang() {while(true);}
+#define __reset() {SCB_AIRCR = 0x05FA0004;}//Todo make this an actual function (in assembly)
 
 /* Intrinsics */
 #define __bkpt(imm_) {__asm__ __volatile__("bkpt "#imm_);}
@@ -255,7 +261,6 @@ extern void __delayInstructionsV2(uint32_t instructions);
 #define FLASH_WRPR (*(volatile uint32_t*)(0x40022020))
 
 //RTC
-//0x40002800
 #define RTC_CRH (*(volatile uint32_t*)(0x40002800))
 #define RTC_CRL (*(volatile uint32_t*)(0x40002804))
 #define RTC_PRLH (*(volatile uint32_t*)(0x40002808))

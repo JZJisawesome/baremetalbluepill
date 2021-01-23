@@ -32,8 +32,7 @@ void extistuffs();
 
 void main()
 {
-    __delayInstructionsV2(10000);
-    
+    __delayInstructions(70000000);
     //Setup gpio
     
     GPIOA_CRL = 0x0000bbbb;//Set PA0, PA1, PA2, and PA3 as alternate function 50mhz outputs
