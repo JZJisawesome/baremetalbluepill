@@ -94,6 +94,8 @@ extern void __delayInstructions(uint32_t numberOfInstructions);
 #define __wfe() {__asm__ __volatile__("wfe");}
 #define __wfi() {__asm__ __volatile__("wfi");}
 
+
+/**********************************************************************************************/
 /* MMIO Registers and other useful pointers */
 //Generally in order from low to high addresses
 
@@ -249,6 +251,45 @@ extern void __delayInstructions(uint32_t numberOfInstructions);
 #define TIM2_DMAR (*(volatile uint32_t*)(0x4000004C))
 #define TIM3_DMAR (*(volatile uint32_t*)(0x4000044C))
 #define TIM4_DMAR (*(volatile uint32_t*)(0x4000084C))
+
+//DMA
+#define DMA_ISR (*(volatile uint32_t*)(0x40012000))
+#define DMA_IFCR (*(volatile uint32_t*)(0x40012004))
+
+#define DMA_CCR1 (*(volatile uint32_t*)(0x40012008))
+#define DMA_CNDTR1 (*(volatile uint32_t*)(0x4001200C))
+#define DMA_CPAR1 (*(volatile uint32_t*)(0x40012010))
+#define DMA_CMAR1 (*(volatile uint32_t*)(0x40012014))
+
+#define DMA_CCR2 (*(volatile uint32_t*)(0x4001201C))
+#define DMA_CNDTR2 (*(volatile uint32_t*)(0x40012020))
+#define DMA_CPAR2 (*(volatile uint32_t*)(0x40012024))
+#define DMA_CMAR2 (*(volatile uint32_t*)(0x40012028))
+
+#define DMA_CCR3 (*(volatile uint32_t*)(0x40012030))
+#define DMA_CNDTR3 (*(volatile uint32_t*)(0x40012034))
+#define DMA_CPAR3 (*(volatile uint32_t*)(0x40012038))
+#define DMA_CMAR3 (*(volatile uint32_t*)(0x4001203C))
+
+#define DMA_CCR4 (*(volatile uint32_t*)(0x40012044))
+#define DMA_CNDTR4 (*(volatile uint32_t*)(0x40012048))
+#define DMA_CPAR4 (*(volatile uint32_t*)(0x4001204C))
+#define DMA_CMAR4 (*(volatile uint32_t*)(0x40012050))
+
+#define DMA_CCR5 (*(volatile uint32_t*)(0x40012058))
+#define DMA_CNDTR5 (*(volatile uint32_t*)(0x4001205C))
+#define DMA_CPAR5 (*(volatile uint32_t*)(0x40012060))
+#define DMA_CMAR5 (*(volatile uint32_t*)(0x40012064))
+
+#define DMA_CCR6 (*(volatile uint32_t*)(0x4001206C))
+#define DMA_CNDTR6 (*(volatile uint32_t*)(0x40012070))
+#define DMA_CPAR6 (*(volatile uint32_t*)(0x40012074))
+#define DMA_CMAR6 (*(volatile uint32_t*)(0x40012078))
+
+#define DMA_CCR7 (*(volatile uint32_t*)(0x40012080))
+#define DMA_CNDTR7 (*(volatile uint32_t*)(0x40012084))
+#define DMA_CPAR7 (*(volatile uint32_t*)(0x40012088))
+#define DMA_CMAR7 (*(volatile uint32_t*)(0x4001208C))
 
 //Flash Memory Interface
 #define FLASH_ACR (*(volatile uint32_t*)(0x40022000))
