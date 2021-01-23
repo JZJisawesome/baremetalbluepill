@@ -83,8 +83,16 @@ extern void __delayInstructions(int32_t number);//MUST BE POSITIVE
 #define __wfe() {__asm__ __volatile__("wfe");}
 #define __wfi() {__asm__ __volatile__("wfi");}
 
-/* MMIO Registers */
-//Device Info Registers
+/* MMIO Registers and other useful pointers */
+//Generally in order from low to high addresses
+
+//Pointers To Storage (Flash, SRAM, USB/CAN SRAM, etc.)
+#define FLASH_BASE (*(volatile uint32_t*)(0x08000000))//128k of flash on most clones
+#define SYSTEM_MEMORY_BASE (*(volatile uint32_t*)(0x1FFFF000))//Contains 2k stm32 bootloader rom
+#define SRAM_BASE (*(volatile uint32_t*)(0x20000000))//20k of sram
+#define SHARED_SRAM_BASE (*(volatile uint32_t*)(0x40006000))//512b sram shared with usb/can
+
+//Device Info Registers (Note: not actually registers; part of the stm32 bootloader rom)
 #define F_SIZE (*(volatile uint16_t*)(0x1FFFF7E0))
 #define UDID_LOW (*(volatile uint32_t*)(0x1FFFF7E8))
 #define UDID_MID (*(volatile uint32_t*)(0x1FFFF7EC))
@@ -231,11 +239,32 @@ extern void __delayInstructions(int32_t number);//MUST BE POSITIVE
 #define TIM3_DMAR (*(volatile uint32_t*)(0x4000044C))
 #define TIM4_DMAR (*(volatile uint32_t*)(0x4000084C))
 
+//Flash Memory Interface
+#define FLASH_ACR (*(volatile uint32_t*)(0x40022000))
+#define FLASH_KEYR (*(volatile uint32_t*)(0x40022004))
+#define FLASH_OPTKEYR (*(volatile uint32_t*)(0x40022008))
+#define FLASH_SR (*(volatile uint32_t*)(0x4002200C))
+#define FLASH_CR (*(volatile uint32_t*)(0x40022010))
+#define FLASH_AR (*(volatile uint32_t*)(0x40022014))
+#define FLASH_OBR (*(volatile uint32_t*)(0x4002201C))
+#define FLASH_WRPR (*(volatile uint32_t*)(0x40022020))
+
+//CRC
+#define CRC_DR (*(volatile uint32_t*)(0x40023000))
+#define CRC_IDR (*(volatile uint32_t*)(0x40023004))
+#define CRC_CR (*(volatile uint32_t*)(0x40023008))
+
 //Cortex Registers
 //SysTick
+#define SYST_CTRL (*(volatile uint32_t*)(0xE000E010))
 #define SYST_CSR (*(volatile uint32_t*)(0xE000E010))
+
+#define SYST_LOAD (*(volatile uint32_t*)(0xE000E014))
 #define SYST_RVR (*(volatile uint32_t*)(0xE000E014))
+
+#define SYST_VAL (*(volatile uint32_t*)(0xE000E018))
 #define SYST_CVR (*(volatile uint32_t*)(0xE000E018))
+
 #define SYST_CALIB (*(volatile uint32_t*)(0xE000E01C))
 
 //NVIC
@@ -269,9 +298,21 @@ extern void __delayInstructions(int32_t number);//MUST BE POSITIVE
 
 #define NVIC_STIR (*(volatile uint32_t*)(0xE000EF00))
 
-//SCB
+//SCB (System Control Block)
 #define SCB_ACTLR (*(volatile uint32_t*)(0xE000E008))
 #define SCB_CPUID (*(volatile uint32_t*)(0xE000ED00))//Should be 0x411FC231; clone is 0x412FC231
-//todo the rest
+#define SCB_ICSR (*(volatile uint32_t*)(0xE000ED04))
+#define SCB_VTOR (*(volatile uint32_t*)(0xE000ED08))
+#define SCB_AIRCR (*(volatile uint32_t*)(0xE000ED0C))
+#define SCB_SCR (*(volatile uint32_t*)(0xE000ED10))
+#define SCB_CCR (*(volatile uint32_t*)(0xE000ED14))
+#define SCB_SHPR1 (*(volatile uint32_t*)(0xE000ED18))
+#define SCB_SHPR2 (*(volatile uint32_t*)(0xE000ED1C))
+#define SCB_SHPR3 (*(volatile uint32_t*)(0xE000ED20))
+#define SCB_SHCRS (*(volatile uint32_t*)(0xE000ED24))
+#define SCB_CFSR (*(volatile uint32_t*)(0xE000ED28))
+#define SCB_HFSR (*(volatile uint32_t*)(0xE000ED2C))
+#define SCB_MMAR (*(volatile uint32_t*)(0xE000ED34))
+#define SCB_BFAR (*(volatile uint32_t*)(0xE000ED38))
 
 #endif//BLUEPILL_H

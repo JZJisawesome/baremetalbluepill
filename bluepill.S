@@ -336,11 +336,11 @@ __clockInit:@Sets all clocks to maximum (rated) frequencies and enables all peri
     /* Configure clocks/dividers/the pll */
     
     @Configure RCC_CFGR before RCC_CR (PLL settings must be configured before it is enabled)
-        @Set PLL mul to 9x (72mhz)HSE to not be divided, and PLL to use the HSE
+        @Set PLL mul to 9x (72mhz), HSE to not be divided, and PLL to use the HSE
     str r4, [r9, 0x4]@Store 0x001D0000 to RCC_CFGR
     
     @Configure RCC_CR
-        @Enable PLL and HSE; leave HSI/trim stuff alone
+        @Enable PLL and HSE; leave HSI/trim stuff alone (keep reset values)
     str r3, [r9, 0x0]@Store 0x01010083 to RCC_CR
     
 1:  @Wait for HSE to be stable
