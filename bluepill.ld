@@ -38,9 +38,12 @@ SECTIONS
         KEEP(*(.isr_vector)) /* TODO figure out why if this is put in its own output section, even with KEEP, the section is still discarded*/
         KEEP(*(.init))
         *(.text*)
-        *(.rodata*)
-        
     } > FLASH
+    
+    .rodata :
+    {
+        *(.rodata*)
+    }
     
     /* R/W things/things in ram */
     __DATA_BEGIN_IN_FLASH__ = LOADADDR(.data); /* */

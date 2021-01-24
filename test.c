@@ -33,12 +33,14 @@ void extistuffs();
 void main()
 {
     //__delayInstructions(70000000);//testing
-    //Setup gpio
     
-    GPIOA_CRL = 0x0000bbbb;//Set PA0, PA1, PA2, and PA3 as alternate function 50mhz outputs
-    GPIOB_CRL = 0x00000008;//Set PB0 as input-pulldown/pullup (leaving as pulldown though)
+    //Setup gpio
+    GPIOA_CRL ^= 0x0000ffff;//Set PA0, PA1, PA2, and PA3 as alternate function 50mhz outputs (b)
+    //Set PB0 as input-pulldown/pullup (leaving as pulldown though)
+    //Set PB1 as analog input
+    GPIOB_CRL = 0x00000008;
     GPIOB_CRH = 0x00003000;//Set PB11 as 50mhz output
-    GPIOC_CRH = 0x00300000;//Set PC13 and PC14 as 50mhz outputs
+    GPIOC_CRH = 0x00300000;//Set PC13 as 50mhz output
     
     pwmstuffs();
     setupSystick();
@@ -58,7 +60,7 @@ void pwmstuffs()
     TIM2_CCR1 = 0x7FFF;//50% duty cycle on channel 1
     TIM2_CCR2 = 0x3FFF;//25% duty cycle on channel 2//This channel will be constantly increased by the systick isr
     TIM2_CCR3 = 0x5555;//33% duty cycle on channel 3//Todo debug why channel 3 does not work (appears dead)
-    TIM2_CCR4 = 0x28F;//1% duty cycle on channel 4
+    TIM2_CCR4 = 0x28F;//1% duty cycle on channel 4//Set based on adc readings
     
     TIM2_EGR |= 0x0001;//Generate update event to copy TIM2_PSC, TIM_ARR, and TIM2_CCRx into actual (shadow) registers
     TIM2_CR1 |= 0x0001;//Enable counter (upcounting)
