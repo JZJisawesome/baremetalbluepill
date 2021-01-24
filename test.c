@@ -29,6 +29,7 @@ volatile uint8_t times = 0;//Increases each time exti fires
 void pwmstuffs();
 void setupSystick();
 void extistuffs();
+void adcStuffs();
 
 void main()
 {
@@ -45,6 +46,7 @@ void main()
     pwmstuffs();
     setupSystick();
     extistuffs();
+    adcStuffs();
     
     return;
 }
@@ -80,10 +82,52 @@ void extistuffs()
     EXTI_RTSR = 0x00000001;//Trigger on the rising edge of PB0
     EXTI_FTSR = 0x00000001;//Trigger on the falling edge of PB0
     EXTI_IMR = 0x0000FFFF;//Enable the EXTI0 interrupt
-    NVIC_ISER0 = 0x00000040;//Enable the interrupt in the nvic
+    NVIC_ISER0 = 0x00000040;//Enable the interrupt in the nvic (6) (set to enable)
+}
+
+void adcStuffs()
+{
+    ADC1_CR2 = 0x00000001;//Turn on adc
+    __delayInstructions(72);//Ensure t_stab has passed
+    ADC1_CR2 |= 0x00000004;//Begin calibration
+    
+    while (ADC1_CR2 & 0x00000004);//Wait for calibration to finish
+    
+    //Enable continuous conversion mode and left align result
+    ADC1_CR2 |= 0x00000802;
+    
+    //By default, there is only 1 channel in sequence (ADC_SQR1 L[3:0] = 0000 at reset)
+    //So, since we will be reading from PB1, set the first (only) channel in the sequence to 9
+    ADC1_SQR3 = 0x00000009;
+    
+    ADC1_CR1 |= 0x00000010;//Enable the end of conversion interrupt (EOCIE)
+    NVIC_ISER0 = 0x00040000;//Enable the interrupt in the nvic (18) (set to enable)
+    
+    ADC1_CR2 |= 0x00000001;//Begin continuous conversion
+    
+    //TODO 1 conversion completes and can be read by debugger (print/x *(int*)0x4001244C)
+    //However interrupt never fires, so DR is never read, so EOC bit is never cleared, so
+    //only 1 conversion happens (unless debugger reads from dr register)
+    //Either something is up with the nvic or the eocie
+    //Note that the values coming from the adc match the pot however, so other than interrupts
+    //things are working!
 }
 
 /* Testing Various interrupts */
+
+volatile uint32_t adcTest = 0;
+volatile uint16_t adcTestread = 0;
+
+__attribute__ ((interrupt ("IRQ"))) void __ISR_ADC1_2()
+{
+    //Write value to TIM2_CCR4 here, shifted 4 bits left (or use left adc alignment)
+    
+    //testing
+    adcTestread = ADC1_DR & 0x0000FFFF;//Read conversion result; also clears eoc bit in ADC1_SR
+    adcTest++;//debugging
+    
+    NVIC_ICPR0 = 0x00040000;//Clear the interrupt flag in the nvic (set to clear)
+}
 
 __attribute__ ((interrupt ("IRQ"))) void __ISR_EXTI0()
 {
