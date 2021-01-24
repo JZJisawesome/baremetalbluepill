@@ -81,7 +81,7 @@ extern void __delayInstructions(uint32_t numberOfInstructions);
 /* Useful macros */
 
 #define __hang() {while(true);}
-#define __reset() {SCB_AIRCR = 0x05FA0004;}//Todo make this an actual function (in assembly)
+#define __reset() {SCB_AIRCR = 0x05FA0004;}//TODO fit thisfunction inside of the vector table
 
 /* Intrinsics */
 #define __bkpt(imm_) {__asm__ __volatile__("bkpt "#imm_);}
@@ -131,13 +131,20 @@ extern void __delayInstructions(uint32_t numberOfInstructions);
 #define RTC_ALRL (*(volatile uint16_t*)(0x40002824))
 
 //Window Watchdog Registers (Base: 0x40002C00)
-//TODO
+#define WWDG_CR (*(volatile uint16_t*)(0x40002C00))
+#define WWDG_CFR (*(volatile uint16_t*)(0x40002C04))
+#define WWDG_SR (*(volatile uint16_t*)(0x40002C08))
 
 //Independent Watchdog Registers (Base: 0x40003000)
-//TODO
+#define IWDG_KR (*(volatile uint16_t*)(0x40003000))
+#define IWDG_PR (*(volatile uint16_t*)(0x40003004))
+#define IWDG_RLR (*(volatile uint16_t*)(0x40003008))
+#define IWDG_SR (*(volatile uint16_t*)(0x4000300C))
 
 //I2C (Bases: 1:0x40005400 2:0x40005800)
-//TODO
+#define I2C1_CR1 (*(volatile uint16_t*)(0x40005400))
+#define I2C2_CR1 (*(volatile uint16_t*)(0x40005800))
+//TODO finish
 
 //USB (Base: 0x40005C00)
 //TODO
@@ -386,7 +393,7 @@ extern void __delayInstructions(uint32_t numberOfInstructions);
 
 #define SYST_CALIB (*(volatile uint32_t*)(0xE000E01C))
 
-//NVIC (Base: TODO)
+//NVIC (Base: 0xE000E100)
 #define NVIC_ISER0 (*(volatile uint32_t*)(0xE000E100))
 #define NVIC_ISER1 (*(volatile uint32_t*)(0xE000E104))
 
