@@ -98,6 +98,7 @@ extern void __delayInstructions(uint32_t numberOfInstructions);
 /**********************************************************************************************/
 /* MMIO Registers and other useful pointers */
 //Generally in order from low to high addresses
+//However, peripherals will be grouped, and the first peripheral decides its section's location
 
 //Pointers To Storage (Flash, SRAM, USB/CAN SRAM, etc.)
 #define FLASH_BASE (*(volatile uint32_t*)(0x08000000))//128k of flash on most clones
@@ -122,6 +123,21 @@ extern void __delayInstructions(uint32_t numberOfInstructions);
 #define RTC_CNTL (*(volatile uint32_t*)(0x4000281C))
 #define RTC_ALRH (*(volatile uint32_t*)(0x40002820))
 #define RTC_ALRL (*(volatile uint32_t*)(0x40002824))
+
+//Window Watchdog Registers (Base: 0x40002C00)
+//TODO
+
+//Independent Watchdog Registers (Base: 0x40003000)
+//TODO
+
+//I2C (Bases: 1:0x40005400 2:0x40005800)
+//TODO
+
+//USB (Base: 0x40005C00)
+//TODO
+
+//CAN (Base: 0x40006400)
+//TODO
 
 //Backup Registers (Base: 0x40006C00)
 //TODO
@@ -277,6 +293,9 @@ extern void __delayInstructions(uint32_t numberOfInstructions);
 //SPI (Bases: 1:0x40013000 2:0x40003800)
 //TODO
 
+//USART (Bases: 1: 0x40013800 2:0x40004400 3:0x40004800)
+//TODO
+
 //DMA (Base: 0x40020000)
 #define DMA_ISR (*(volatile uint32_t*)(0x40020000))
 #define DMA_IFCR (*(volatile uint32_t*)(0x40020004))
@@ -316,6 +335,9 @@ extern void __delayInstructions(uint32_t numberOfInstructions);
 #define DMA_CPAR7 (*(volatile uint32_t*)(0x40020088))
 #define DMA_CMAR7 (*(volatile uint32_t*)(0x4002008C))
 
+//Reset + Clock Control Registers (Base: 0x40021000)
+//TODO
+
 //Flash Memory Interface (Base: 0x40022000)
 #define FLASH_ACR (*(volatile uint32_t*)(0x40022000))
 #define FLASH_KEYR (*(volatile uint32_t*)(0x40022004))
@@ -332,7 +354,7 @@ extern void __delayInstructions(uint32_t numberOfInstructions);
 #define CRC_CR (*(volatile uint32_t*)(0x40023008))
 
 //Cortex Registers
-//SysTick
+//SysTick (Base: TODO)
 #define SYST_CTRL (*(volatile uint32_t*)(0xE000E010))
 #define SYST_CSR (*(volatile uint32_t*)(0xE000E010))
 
@@ -344,7 +366,7 @@ extern void __delayInstructions(uint32_t numberOfInstructions);
 
 #define SYST_CALIB (*(volatile uint32_t*)(0xE000E01C))
 
-//NVIC
+//NVIC (Base: TODO)
 #define NVIC_ISER0 (*(volatile uint32_t*)(0xE000E100))
 #define NVIC_ISER1 (*(volatile uint32_t*)(0xE000E104))
 
@@ -375,7 +397,7 @@ extern void __delayInstructions(uint32_t numberOfInstructions);
 
 #define NVIC_STIR (*(volatile uint32_t*)(0xE000EF00))
 
-//SCB (System Control Block) (most have base of 0xE000ED00; SCB_ACTLR is the exception)
+//SCB (System Control Block) (Base: 0xE000ED00; SCB_ACTLR is an exception)
 #define SCB_ACTLR (*(volatile uint32_t*)(0xE000E008))
 #define SCB_CPUID (*(volatile uint32_t*)(0xE000ED00))//Should be 0x411FC231; clone is 0x412FC231
 #define SCB_ICSR (*(volatile uint32_t*)(0xE000ED04))
