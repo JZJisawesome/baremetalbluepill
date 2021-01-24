@@ -113,6 +113,7 @@ extern void __delayInstructions(uint32_t numberOfInstructions);
 
 //Device Info Registers (Note: not actually registers; part of the stm32 bootloader rom)
 #define F_SIZE (*(volatile uint16_t*)(0x1FFFF7E0))
+#define UDID_BASE (*(volatile uint32_t*)(0x1FFFF7E8))
 #define UDID_LOW (*(volatile uint32_t*)(0x1FFFF7E8))
 #define UDID_MID (*(volatile uint32_t*)(0x1FFFF7EC))
 #define UDID_HIGH (*(volatile uint32_t*)(0x1FFFF7F0))
@@ -304,10 +305,10 @@ extern void __delayInstructions(uint32_t numberOfInstructions);
 #define TIM3_DCR (*(volatile uint16_t*)(0x40000448))
 #define TIM4_DCR (*(volatile uint16_t*)(0x40000848))
 
-#define TIM1_DMAR (*(volatile uint16_t*)(0x40012C4C))
-#define TIM2_DMAR (*(volatile uint16_t*)(0x4000004C))
-#define TIM3_DMAR (*(volatile uint16_t*)(0x4000044C))
-#define TIM4_DMAR (*(volatile uint16_t*)(0x4000084C))
+#define TIM1_DMAR (*(volatile uint32_t*)(0x40012C4C))
+#define TIM2_DMAR (*(volatile uint32_t*)(0x4000004C))
+#define TIM3_DMAR (*(volatile uint32_t*)(0x4000044C))
+#define TIM4_DMAR (*(volatile uint32_t*)(0x4000084C))
 
 //SPI (Bases: 1:0x40013000 2:0x40003800)
 //TODO
