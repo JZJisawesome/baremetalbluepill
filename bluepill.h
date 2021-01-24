@@ -96,9 +96,14 @@ extern void __delayInstructions(uint32_t numberOfInstructions);
 
 
 /**********************************************************************************************/
-/* MMIO Registers and other useful pointers */
-//Generally in order from low to high addresses
-//However, peripherals will be grouped, and the first peripheral decides its section's location
+/* MMIO Registers and other useful pointers
+ *
+ * Generally in order from low to high addresses. However, peripherals will be grouped, and the
+ * first peripheral "decides" its section's location in the file.
+ * 
+ * Also note that registers that can be accessed by halfwords and only have into in the least
+ * significant 16 bits, will be uint16_t* instead of uint32_t*
+ */
 
 //Pointers To Storage (Flash, SRAM, USB/CAN SRAM, etc.)
 #define FLASH_BASE (*(volatile uint32_t*)(0x08000000))//128k of flash on most clones
@@ -113,16 +118,16 @@ extern void __delayInstructions(uint32_t numberOfInstructions);
 #define UDID_HIGH (*(volatile uint32_t*)(0x1FFFF7F0))
 
 //RTC (Base: 0x40002800)
-#define RTC_CRH (*(volatile uint32_t*)(0x40002800))
-#define RTC_CRL (*(volatile uint32_t*)(0x40002804))
-#define RTC_PRLH (*(volatile uint32_t*)(0x40002808))
-#define RTC_PRLL (*(volatile uint32_t*)(0x4000280C))
-#define RTC_DIVH (*(volatile uint32_t*)(0x40002810))
-#define RTC_DIVL (*(volatile uint32_t*)(0x40002814))
-#define RTC_CNTH (*(volatile uint32_t*)(0x40002818))
-#define RTC_CNTL (*(volatile uint32_t*)(0x4000281C))
-#define RTC_ALRH (*(volatile uint32_t*)(0x40002820))
-#define RTC_ALRL (*(volatile uint32_t*)(0x40002824))
+#define RTC_CRH (*(volatile uint16_t*)(0x40002800))
+#define RTC_CRL (*(volatile uint16_t*)(0x40002804))
+#define RTC_PRLH (*(volatile uint16_t*)(0x40002808))
+#define RTC_PRLL (*(volatile uint16_t*)(0x4000280C))
+#define RTC_DIVH (*(volatile uint16_t*)(0x40002810))
+#define RTC_DIVL (*(volatile uint16_t*)(0x40002814))
+#define RTC_CNTH (*(volatile uint16_t*)(0x40002818))
+#define RTC_CNTL (*(volatile uint16_t*)(0x4000281C))
+#define RTC_ALRH (*(volatile uint16_t*)(0x40002820))
+#define RTC_ALRL (*(volatile uint16_t*)(0x40002824))
 
 //Window Watchdog Registers (Base: 0x40002C00)
 //TODO
@@ -139,12 +144,26 @@ extern void __delayInstructions(uint32_t numberOfInstructions);
 //CAN (Base: 0x40006400)
 //TODO
 
-//Backup Registers (Base: 0x40006C00)
-//TODO
+//Backup Registers (Base: 0x40006C00) (Note: This address space contains registers for the RTC)
+#define BKP_DR1 (*(volatile uint16_t*)(0x40006C04))
+#define BKP_DR2 (*(volatile uint16_t*)(0x40006C08))
+#define BKP_DR3 (*(volatile uint16_t*)(0x40006C0C))
+#define BKP_DR4 (*(volatile uint16_t*)(0x40006C10))
+#define BKP_DR5 (*(volatile uint16_t*)(0x40006C14))
+#define BKP_DR6 (*(volatile uint16_t*)(0x40006C18))
+#define BKP_DR7 (*(volatile uint16_t*)(0x40006C1C))
+#define BKP_DR8 (*(volatile uint16_t*)(0x40006C20))
+#define BKP_DR9 (*(volatile uint16_t*)(0x40006C24))
+#define BKP_DR10 (*(volatile uint16_t*)(0x40006C28))
+
+#define BKP_RTCCR (*(volatile uint16_t*)(0x40006C2C))
+
+#define BKP_CR (*(volatile uint16_t*)(0x40006C30))
+#define BKP_CSR (*(volatile uint16_t*)(0x40006C34))
 
 //Power Control (Base: 0x40007000)
-#define PWR_CR (*(volatile uint32_t*)(0x40007000))
-#define PWR_CSR (*(volatile uint32_t*)(0x40007004))
+#define PWR_CR (*(volatile uint16_t*)(0x40007000))
+#define PWR_CSR (*(volatile uint16_t*)(0x40007004))
 
 //Alternate IO Function Config Registers (Base: 0x40010000)
 #define AFIO_EVCR (*(volatile uint32_t*)(0x40010000))
@@ -354,7 +373,7 @@ extern void __delayInstructions(uint32_t numberOfInstructions);
 #define CRC_CR (*(volatile uint32_t*)(0x40023008))
 
 //Cortex Registers
-//SysTick (Base: TODO)
+//SysTick (Base: 0xE000E010)
 #define SYST_CTRL (*(volatile uint32_t*)(0xE000E010))
 #define SYST_CSR (*(volatile uint32_t*)(0xE000E010))
 
