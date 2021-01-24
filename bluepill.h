@@ -220,7 +220,65 @@ extern void __delayInstructions(uint32_t numberOfInstructions);
 #define GPIOC_LCKR (*(volatile uint32_t*)(0x40011018))
 
 //ADC (Bases: 1:0x40012400 2:0x40012800)
-//TODO
+#define ADC1_SR (*(volatile uint32_t*)(0x40012400))
+#define ADC2_SR (*(volatile uint32_t*)(0x40012800))
+
+#define ADC1_CR1 (*(volatile uint32_t*)(0x40012404))
+#define ADC2_CR1 (*(volatile uint32_t*)(0x40012804))
+
+#define ADC1_CR2 (*(volatile uint32_t*)(0x40012408))
+#define ADC2_CR2 (*(volatile uint32_t*)(0x40012808))
+
+#define ADC1_SMPR1 (*(volatile uint32_t*)(0x4001240C))
+#define ADC2_SMPR1 (*(volatile uint32_t*)(0x4001280C))
+
+#define ADC1_SMPR2 (*(volatile uint32_t*)(0x40012410))
+#define ADC2_SMPR2 (*(volatile uint32_t*)(0x40012810))
+
+#define ADC1_JOFR1 (*(volatile uint32_t*)(0x40012414))
+#define ADC2_JOFR1 (*(volatile uint32_t*)(0x40012814))
+
+#define ADC1_JOFR2 (*(volatile uint32_t*)(0x40012418))
+#define ADC2_JOFR2 (*(volatile uint32_t*)(0x40012818))
+
+#define ADC1_JOFR3 (*(volatile uint32_t*)(0x4001241C))
+#define ADC2_JOFR3 (*(volatile uint32_t*)(0x4001281C))
+
+#define ADC1_JOFR4 (*(volatile uint32_t*)(0x40012420))
+#define ADC2_JOFR4 (*(volatile uint32_t*)(0x40012820))
+
+#define ADC1_HTR (*(volatile uint32_t*)(0x40012424))
+#define ADC2_HTR (*(volatile uint32_t*)(0x40012824))
+
+#define ADC1_LTR (*(volatile uint32_t*)(0x40012428))
+#define ADC2_LTR (*(volatile uint32_t*)(0x40012828))
+
+#define ADC1_SQR1 (*(volatile uint32_t*)(0x4001242C))
+#define ADC2_SQR1 (*(volatile uint32_t*)(0x4001282C))
+
+#define ADC1_SQR2 (*(volatile uint32_t*)(0x40012430))
+#define ADC2_SQR2 (*(volatile uint32_t*)(0x40012830))
+
+#define ADC1_SQR3 (*(volatile uint32_t*)(0x40012434))
+#define ADC2_SQR3 (*(volatile uint32_t*)(0x40012834))
+
+#define ADC1_JSQR (*(volatile uint32_t*)(0x40012438))
+#define ADC2_JSQR (*(volatile uint32_t*)(0x40012838))
+
+#define ADC1_JDR1 (*(volatile uint32_t*)(0x4001243C))
+#define ADC2_JDR1 (*(volatile uint32_t*)(0x4001283C))
+
+#define ADC1_JDR2 (*(volatile uint32_t*)(0x40012440))
+#define ADC2_JDR2 (*(volatile uint32_t*)(0x40012840))
+
+#define ADC1_JDR3 (*(volatile uint32_t*)(0x40012444))
+#define ADC2_JDR3 (*(volatile uint32_t*)(0x40012844))
+
+#define ADC1_JDR4 (*(volatile uint32_t*)(0x40012448))
+#define ADC2_JDR4 (*(volatile uint32_t*)(0x40012848))
+
+#define ADC1_DR (*(volatile uint32_t*)(0x4001244C))
+#define ADC2_DR (*(volatile uint32_t*)(0x4001284C))
 
 //Timers (Bases: 1:0x40012C00 2:0x40000000 3:0x40000400 4:0x40000800)
 #define TIM1_CR1 (*(volatile uint16_t*)(0x40012C00))
