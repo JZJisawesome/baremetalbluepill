@@ -100,7 +100,7 @@ void adcStuffs()
     //So, since we will be reading from PB1, set the first (only) channel in the sequence to 9
     ADC1_SQR3 = 0x00000009;
     
-    ADC1_CR1 |= 0x00000010;//Enable the end of conversion interrupt (EOCIE)
+    ADC1_CR1 |= 0x00000020;//Enable the end of conversion interrupt (EOCIE)
     NVIC_ISER0 = 0x00040000;//Enable the interrupt in the nvic (18) (set to enable)
     
     ADC1_CR2 |= 0x00000001;//Begin continuous conversion
@@ -125,15 +125,13 @@ __attribute__ ((interrupt ("IRQ"))) void __ISR_ADC1_2()
     //testing
     adcTestread = ADC1_DR & 0x0000FFFF;//Read conversion result; also clears eoc bit in ADC1_SR
     adcTest++;//debugging
-    
-    NVIC_ICPR0 = 0x00040000;//Clear the interrupt flag in the nvic (set to clear)
 }
 
 __attribute__ ((interrupt ("IRQ"))) void __ISR_EXTI0()
 {
-    GPIOC_ODR |= 0x00002000;//Set led on
     EXTI_PR = 0x00000001;//Clear pending bit in peripheral register (set to clear)
-    NVIC_ICPR0 = 0x00000040;//Clear the interrupt flag in the nvic (set to clear)
+    GPIOC_ODR |= 0x00002000;//Set led on
+    
     ++times;
 }
 

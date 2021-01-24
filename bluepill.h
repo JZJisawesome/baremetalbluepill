@@ -451,7 +451,7 @@ extern void __delayInstructions(uint32_t numberOfInstructions);
 
 #define SYST_CALIB (*(volatile uint32_t*)(0xE000E01C))
 
-//NVIC (Base: 0xE000E100)
+//NVIC (Base: 0xE000E100; NVIC_STIR is an exception)
 #define NVIC_ISER0 (*(volatile uint32_t*)(0xE000E100))
 #define NVIC_ISER1 (*(volatile uint32_t*)(0xE000E104))
 
