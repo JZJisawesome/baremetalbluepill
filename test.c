@@ -37,6 +37,7 @@ void main()
     
     //Setup gpio
     GPIOA_CRL ^= 0x0000ffff;//Set PA0, PA1, PA2, and PA3 as alternate function 50mhz outputs (b)
+    GPIOA_CRL = 0x000004b0;//Set PA9 as alternate function output and PA10 as floating input
     //Set PB0 as input-pulldown/pullup (leaving as pulldown though)
     //Set PB1 as analog input
     GPIOB_CRL = 0x00000008;
@@ -104,27 +105,18 @@ void adcStuffs()
     NVIC_ISER0 = 0x00040000;//Enable the interrupt in the nvic (18) (set to enable)
     
     ADC1_CR2 |= 0x00000001;//Begin continuous conversion
-    
-    //TODO 1 conversion completes and can be read by debugger (print/x *(int*)0x4001244C)
-    //However interrupt never fires, so DR is never read, so EOC bit is never cleared, so
-    //only 1 conversion happens (unless debugger reads from dr register)
-    //Either something is up with the nvic or the eocie
-    //Note that the values coming from the adc match the pot however, so other than interrupts
-    //things are working!
 }
 
 /* Testing Various interrupts */
-
-volatile uint32_t adcTest = 0;
-volatile uint16_t adcTestread = 0;
 
 __attribute__ ((interrupt ("IRQ"))) void __ISR_ADC1_2()
 {
     //Write value to TIM2_CCR4 here, shifted 4 bits left (or use left adc alignment)
     
     //testing
-    adcTestread = ADC1_DR & 0x0000FFFF;//Read conversion result; also clears eoc bit in ADC1_SR
-    adcTest++;//debugging
+    //Read conversion result; also clears eoc bit in ADC1_SR
+    //Store as pwm duty cycle
+    TIM2_CCR4 = ADC1_DR & 0x0000FFFF;
 }
 
 __attribute__ ((interrupt ("IRQ"))) void __ISR_EXTI0()
