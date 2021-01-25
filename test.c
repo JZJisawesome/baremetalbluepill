@@ -30,6 +30,7 @@ void pwmstuffs();
 void setupSystick();
 void extistuffs();
 void adcStuffs();
+void uartStuffs();
 
 void main()
 {
@@ -37,7 +38,7 @@ void main()
     
     //Setup gpio
     GPIOA_CRL ^= 0x0000ffff;//Set PA0, PA1, PA2, and PA3 as alternate function 50mhz outputs (b)
-    GPIOA_CRL = 0x000004b0;//Set PA9 as alternate function output and PA10 as floating input
+    GPIOA_CRH = 0x000004b0;//Set PA9 as alternate function output and PA10 as floating input
     //Set PB0 as input-pulldown/pullup (leaving as pulldown though)
     //Set PB1 as analog input
     GPIOB_CRL = 0x00000008;
@@ -110,7 +111,17 @@ void adcStuffs()
 
 void uartStuffs()
 {
+    USART1_BRR = 0x1D4C;//468.75 means 9600 baud because usart1 runs at 72mhz
     
+    //TODO after testing, also enable interrupts in CR1
+    USART1_CR1 = 0x200C;//Enable usart, transmitter, and receiver
+    
+    //testing sending
+    while (true)
+    {
+        if (USART1_SR & 0x0080)//Transmit data register is empty
+            USART1_DR = 'J';//Write data to the usart
+    }
 }
 
 /* Testing Various interrupts */
