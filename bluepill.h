@@ -379,7 +379,33 @@ extern void __delayInstructions(uint32_t numberOfInstructions);
 //TODO
 
 //USART (Bases: 1: 0x40013800 2:0x40004400 3:0x40004800)
-//TODO
+#define USART1_SR (*(volatile uint16_t*)(0x40013800))
+#define USART2_SR (*(volatile uint16_t*)(0x40004400))
+#define USART3_SR (*(volatile uint16_t*)(0x40004800))
+
+#define USART1_DR (*(volatile uint16_t*)(0x40013800))
+#define USART2_DR (*(volatile uint16_t*)(0x40004400))
+#define USART3_DR (*(volatile uint16_t*)(0x40004800))
+
+#define USART1_BRR (*(volatile uint16_t*)(0x40013800))
+#define USART2_BRR (*(volatile uint16_t*)(0x40004400))
+#define USART3_BRR (*(volatile uint16_t*)(0x40004800))
+
+#define USART1_CR1 (*(volatile uint16_t*)(0x40013800))
+#define USART2_CR1 (*(volatile uint16_t*)(0x40004400))
+#define USART3_CR1 (*(volatile uint16_t*)(0x40004800))
+
+#define USART1_CR2 (*(volatile uint16_t*)(0x40013800))
+#define USART2_CR2 (*(volatile uint16_t*)(0x40004400))
+#define USART3_CR2 (*(volatile uint16_t*)(0x40004800))
+
+#define USART1_CR3 (*(volatile uint16_t*)(0x40013800))
+#define USART2_CR3 (*(volatile uint16_t*)(0x40004400))
+#define USART3_CR3 (*(volatile uint16_t*)(0x40004800))
+
+#define USART1_GTPR (*(volatile uint16_t*)(0x40013800))
+#define USART2_GTPR (*(volatile uint16_t*)(0x40004400))
+#define USART3_GTPR (*(volatile uint16_t*)(0x40004800))
 
 //DMA (Base: 0x40020000)
 #define DMA_ISR (*(volatile uint32_t*)(0x40020000))

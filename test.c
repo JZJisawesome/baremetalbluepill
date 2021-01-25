@@ -48,6 +48,7 @@ void main()
     setupSystick();
     extistuffs();
     adcStuffs();
+    uartStuffs();
     
     return;
 }
@@ -107,7 +108,17 @@ void adcStuffs()
     ADC1_CR2 |= 0x00000001;//Begin continuous conversion
 }
 
+void uartStuffs()
+{
+    
+}
+
 /* Testing Various interrupts */
+
+__attribute__ ((interrupt ("IRQ"))) void __ISR_USART1()
+{
+    //todo
+}
 
 __attribute__ ((interrupt ("IRQ"))) void __ISR_ADC1_2()
 {
