@@ -110,25 +110,38 @@ void adcStuffs()
 }
 
 void uartStuffs()
-{
+{   
     USART1_BRR = 0x1D4C;//468.75 means 9600 baud because usart1 runs at 72mhz
+    //USART1_CR1 = 0x202C;//Enable usart, transmitter, receiver and receive interrupt
+    NVIC_ISER1 = 0x0020;//Enable the interrupt in the nvic (37) (set to enable)
     
-    //TODO after testing, also enable interrupts in CR1
-    USART1_CR1 = 0x200C;//Enable usart, transmitter, and receiver
     
-    //testing sending
+
+    //testing sending repeadetly with loop
+    /*USART1_CR1 = 0x200C;//Enable usart, transmitter, and receiver
     while (true)
     {
         if (USART1_SR & 0x0080)//Transmit data register is empty
             USART1_DR = 'J';//Write data to the usart
-    }
+    }*/
+    
+    //testing sending repeadetly with interrupt
+    USART1_CR1 = 0x204C;//Enable usart, transmitter, receiver and transmit interrupt
 }
 
 /* Testing Various interrupts */
 
 __attribute__ ((interrupt ("IRQ"))) void __ISR_USART1()
 {
-    //todo
+    /*
+    char data = USART1_DR;//Read character
+    
+    if (USART1_SR & 0x0080)//Transmit data register is empty; if full, character is discarded
+        USART1_DR = data;//We can echo what we received
+    */
+    
+    //testing sending repeadetly with interrupt
+    USART1_DR = 'J';
 }
 
 __attribute__ ((interrupt ("IRQ"))) void __ISR_ADC1_2()
