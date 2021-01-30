@@ -128,21 +128,15 @@ void uartStuffs()
 
 void spiStuffs()
 {
-    //todo setup spi with non-inverted clock and set to latch data on positive edge
-    //Also use nss with inverted logic, so rclk is toggled over the course of a transfer
-    //Don't use interrupts for this test; just send data recieved over serial instead
-    
-    //Finalish settings
-    //SPI1_CR1 = 0b0000001111111100;//Enable software input of nss pin held high to keep in master mode, lsbfirst, enable spi, Baud rate = fPCLK/256, Master, CPOL=0, CPHA=0
-    //SPI1_CR2 = 0x0080;//Enable tx buffer empty interrupt
-    //NVIC_ISER1 = 0x0008;//Enable spi1 interrupt in nvic (35)(set to enable)
-    
-    //Final settings
+    //Settings
     SPI1_CR1 = 0b0000001111011100;//Enable software input of nss pin held high to keep in master mode, lsbfirst, enable spi, Baud rate = fPCLK/16, Master, CPOL=0, CPHA=0
+    
+    //TODO use these to toggle RCLK with an interrupt instead of waiting in a loop like below/in the uart interrupt handeler
     //SPI1_CR2 = 0x0080;//Enable tx buffer empty interrupt
     //NVIC_ISER1 = 0x0008;//Enable spi1 interrupt in nvic (35)(set to enable)
     
     //Testing output
+    /*
     uint8_t test = 0;
     while (true)
     {
@@ -152,13 +146,14 @@ void spiStuffs()
             SPI1_DR = test++;
         
         //while(~(SPI1_SR & 0x0002) | (SPI1_SR & 0x0080));//Wait for transfer to finish (transmit buffer empty and no longer busy) before toggling rclk
-        __delayInstructions(30);//Wait a tiny bit (for transfer to finish, because above does not work)
+        __delayInstructions(100);//Wait a tiny bit (for transfer to finish, because above does not work)
         
         GPIOA_ODR |= 0x0010;//Set PA4 high
         GPIOA_ODR &= 0xFFEF;//Set PA4 low
         
         __delayInstructions(1000000);
     }
+    */
 }
 
 /* Testing Various interrupts */
@@ -169,7 +164,7 @@ __attribute__ ((interrupt ("IRQ"))) void __ISR_SPI1()
     GPIOA_ODR |= 0x0010;//Set PA4 high
     GPIOA_ODR &= 0xFFEF;//Set PA4 high
     
-    //todo disable this after a single toggle, enable when sending data
+    //TODO use this instead of busywaiting in usart handler below (more efficient)
 }
 
 __attribute__ ((interrupt ("IRQ"))) void __ISR_USART1()
@@ -180,7 +175,17 @@ __attribute__ ((interrupt ("IRQ"))) void __ISR_USART1()
     if (USART1_SR & 0x0080)//Transmit data register is empty; if full, character is discarded
         USART1_DR = data;//We can echo what we received
         
-    //TODO also shift out to 74hc595 using spi
+    //Also shift out data to SPI
+    //Write data
+    if (SPI1_SR & 0x0002)//Transmit buffer is empty
+        SPI1_DR = data;
+    
+    //TODO to the RCLK pin toggling in it's own interrupt instead of waiting here
+    //while(~(SPI1_SR & 0x0002) | (SPI1_SR & 0x0080));//Wait for transfer to finish (transmit buffer empty and no longer busy) before toggling rclk
+    __delayInstructions(100);//Wait a tiny bit (for transfer to finish, because above does not work)
+    
+    GPIOA_ODR |= 0x0010;//Set PA4 high
+    GPIOA_ODR &= 0xFFEF;//Set PA4 low
 }
 
 __attribute__ ((interrupt ("IRQ"))) void __ISR_ADC1_2()
