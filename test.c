@@ -41,7 +41,8 @@ void main()
     //__delayInstructions(70000000);//testing
     
     //Setup gpio
-    GPIOA_CRL ^= 0xf0ffffff;//Set PA0 to 3, 4, 5, 7 as alternate function 50mhz outputs (b)
+    //PA4 is set as 50mhz output (0x4 ^ 0x7 = 0x3)
+    GPIOA_CRL ^= 0xf0f7ffff;//Set PA0 to 3, 5, 7 as alternate function 50mhz outputs (b)
     GPIOA_CRH = 0x000008b0;//Set PA9 as alternate function output and PA10 as pull down input
     //Set PB0 as input-pulldown/pullup (leaving as pulldown though)
     //Set PB1 as analog input
@@ -130,9 +131,29 @@ void spiStuffs()
     //todo setup spi with non-inverted clock and set to latch data on positive edge
     //Also use nss with inverted logic, so rclk is toggled over the course of a transfer
     //Don't use interrupts for this test; just send data recieved over serial instead
+    
+    SPI1_CR1 = 0b0000000011111100;//lsbfirst, Enable spi, Baud rate = fPCLK/256, Master, CPOL=0, CPHA=0
+    SPI1_CR2 = 0x0004;//Enable slave select output
+    
+    //Testing output
+    uint8_t test = 0;
+    while (true)
+    {
+        if (SPI1_SR & 0x0002)//Transmit buffer empty
+            SPI1_DR = 0xAB;
+            //SPI1_DR = test++;
+        
+        __delayInstructions(1000000);
+    }
 }
 
 /* Testing Various interrupts */
+
+__attribute__ ((interrupt ("IRQ"))) void __ISR_SPI1()
+{
+    //After an spi transfer completes, toggle PA4 (to high, then low again) to latch data (rclk)
+    GPIOA_ODR
+}
 
 __attribute__ ((interrupt ("IRQ"))) void __ISR_USART1()
 {
