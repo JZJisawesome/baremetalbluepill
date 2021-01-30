@@ -33,6 +33,7 @@ void pwmstuffs();
 void setupSystick();
 void extistuffs();
 void adcStuffs();
+void spiStuffs();
 void uartStuffs();
 
 void main()
@@ -40,7 +41,7 @@ void main()
     //__delayInstructions(70000000);//testing
     
     //Setup gpio
-    GPIOA_CRL ^= 0x0000ffff;//Set PA0, PA1, PA2, and PA3 as alternate function 50mhz outputs (b)
+    GPIOA_CRL ^= 0xf0ffffff;//Set PA0 to 3, 4, 5, 7 as alternate function 50mhz outputs (b)
     GPIOA_CRH = 0x000008b0;//Set PA9 as alternate function output and PA10 as pull down input
     //Set PB0 as input-pulldown/pullup (leaving as pulldown though)
     //Set PB1 as analog input
@@ -55,6 +56,7 @@ void main()
     setupSystick();
     extistuffs();
     adcStuffs();
+    spiStuffs();
     uartStuffs();
     
     return;
@@ -123,15 +125,24 @@ void uartStuffs()
     NVIC_ISER1 = 0x0020;//Enable the interrupt in the nvic (37) (set to enable)
 }
 
+void spiStuffs()
+{
+    //todo setup spi with non-inverted clock and set to latch data on positive edge
+    //Also use nss with inverted logic, so rclk is toggled over the course of a transfer
+    //Don't use interrupts for this test; send data recieved over serial instead
+}
+
 /* Testing Various interrupts */
 
 __attribute__ ((interrupt ("IRQ"))) void __ISR_USART1()
 {
-    //Echo!
     char data = USART1_DR;//Read character
     
+    //Echo!
     if (USART1_SR & 0x0080)//Transmit data register is empty; if full, character is discarded
         USART1_DR = data;//We can echo what we received
+        
+    //TODO also shift out to 74hc595 using spi
 }
 
 __attribute__ ((interrupt ("IRQ"))) void __ISR_ADC1_2()
