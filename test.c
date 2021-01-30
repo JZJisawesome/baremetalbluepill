@@ -17,14 +17,17 @@
 */
 
 /* Tests a bunch of functions of the stm32 */
+//Systick
+//Gpio toggling w/ systick
+//ADC1 continuous mode with interrupt (left aligned, maximum frequency, calibration beforehand)
+//PWM timer 2 channels 1 to 4; 1 constant 50%, 2 constantly increased by systick, 3 constant (but not working at the moment for some reason,) 4 being set to left aligned reading from adc
+//UART1 echoing characters at 2000000 baud
 
 #include "bluepill.h"
 
 //These variable are also neat for testing .bss and .data respectively
 volatile uint32_t systickCount = 0;//Counts up every 1 ms
 volatile uint16_t systickCount1000 = 123;//Counts up every 1 ms; resets to 0 after 999; therefore is equal to given number only once a second
-
-volatile uint8_t times = 0;//Increases each time exti fires
 
 void pwmstuffs();
 void setupSystick();
@@ -114,8 +117,8 @@ void adcStuffs()
 
 void uartStuffs()
 {
-    USART1_BRR = 0x1D4C;//72MHz / 468.75*16 = 9600 baud
-    //USART1_BRR = 0x0024;//72Mhz / 2.25*16 = 2000000 baud
+    //USART1_BRR = 0x1D4C;//72MHz / 468.75*16 = 9600 baud
+    USART1_BRR = 0x0024;//72Mhz / 2.25*16 = 2000000 baud
     USART1_CR1 = 0x202C;//Enable usart, transmitter, receiver and receive interrupt
     NVIC_ISER1 = 0x0020;//Enable the interrupt in the nvic (37) (set to enable)
 }
@@ -125,7 +128,6 @@ void uartStuffs()
 __attribute__ ((interrupt ("IRQ"))) void __ISR_USART1()
 {
     //Echo!
-    
     char data = USART1_DR;//Read character
     
     if (USART1_SR & 0x0080)//Transmit data register is empty; if full, character is discarded
