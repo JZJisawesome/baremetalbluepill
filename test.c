@@ -38,12 +38,15 @@ void main()
     
     //Setup gpio
     GPIOA_CRL ^= 0x0000ffff;//Set PA0, PA1, PA2, and PA3 as alternate function 50mhz outputs (b)
-    GPIOA_CRH = 0x000004b0;//Set PA9 as alternate function output and PA10 as floating input
+    GPIOA_CRH = 0x000008b0;//Set PA9 as alternate function output and PA10 as pull down input
     //Set PB0 as input-pulldown/pullup (leaving as pulldown though)
     //Set PB1 as analog input
     GPIOB_CRL = 0x00000008;
     GPIOB_CRH = 0x00003000;//Set PB11 as 50mhz output
     GPIOC_CRH = 0x00300000;//Set PC13 as 50mhz output
+    
+    GPIOA_ODR &= 0xFBFF;//Enable pull down on pa10 (needed because my usb to serial converter struggles to drive the pin low for some reason (PA10 seems to leak current; only a few uamps, but enough to make it a problem))
+    //oops, it's actually not enough. Used an external pulldown as well
     
     pwmstuffs();
     setupSystick();
@@ -110,38 +113,23 @@ void adcStuffs()
 }
 
 void uartStuffs()
-{   
-    USART1_BRR = 0x1D4C;//468.75 means 9600 baud because usart1 runs at 72mhz
-    //USART1_CR1 = 0x202C;//Enable usart, transmitter, receiver and receive interrupt
+{
+    USART1_BRR = 0x1D4C;//72MHz / 468.75*16 = 9600 baud
+    //USART1_BRR = 0x0024;//72Mhz / 2.25*16 = 2000000 baud
+    USART1_CR1 = 0x202C;//Enable usart, transmitter, receiver and receive interrupt
     NVIC_ISER1 = 0x0020;//Enable the interrupt in the nvic (37) (set to enable)
-    
-    
-
-    //testing sending repeadetly with loop
-    /*USART1_CR1 = 0x200C;//Enable usart, transmitter, and receiver
-    while (true)
-    {
-        if (USART1_SR & 0x0080)//Transmit data register is empty
-            USART1_DR = 'J';//Write data to the usart
-    }*/
-    
-    //testing sending repeadetly with interrupt
-    USART1_CR1 = 0x204C;//Enable usart, transmitter, receiver and transmit interrupt
 }
 
 /* Testing Various interrupts */
 
 __attribute__ ((interrupt ("IRQ"))) void __ISR_USART1()
 {
-    /*
+    //Echo!
+    
     char data = USART1_DR;//Read character
     
     if (USART1_SR & 0x0080)//Transmit data register is empty; if full, character is discarded
         USART1_DR = data;//We can echo what we received
-    */
-    
-    //testing sending repeadetly with interrupt
-    USART1_DR = 'J';
 }
 
 __attribute__ ((interrupt ("IRQ"))) void __ISR_ADC1_2()
