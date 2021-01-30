@@ -376,7 +376,26 @@ extern void __delayInstructions(uint32_t numberOfInstructions);
 #define TIM4_DMAR (*(volatile uint32_t*)(0x4000084C))
 
 //SPI (Bases: 1:0x40013000 2:0x40003800)
-//TODO
+#define SPI1_CR1 (*(volatile uint16_t*)(0x40013000))
+#define SPI2_CR1 (*(volatile uint16_t*)(0x40003800))
+
+#define SPI1_CR2 (*(volatile uint16_t*)(0x40013004))
+#define SPI2_CR2 (*(volatile uint16_t*)(0x40003804))
+
+#define SPI1_SR (*(volatile uint16_t*)(0x40013008))
+#define SPI2_SR (*(volatile uint16_t*)(0x40003808))
+
+#define SPI1_DR (*(volatile uint16_t*)(0x4001300C))
+#define SPI2_DR (*(volatile uint16_t*)(0x4000380C))
+
+#define SPI1_CRCPR (*(volatile uint16_t*)(0x40013010))
+#define SPI2_CRCPR (*(volatile uint16_t*)(0x40003810))
+
+#define SPI1_RXCRCR (*(volatile uint16_t*)(0x40013014))
+#define SPI2_RXCRCR (*(volatile uint16_t*)(0x40003814))
+
+#define SPI1_TXCRCR (*(volatile uint16_t*)(0x40013018))
+#define SPI2_TXCRCR (*(volatile uint16_t*)(0x40003818))
 
 //USART (Bases: 1: 0x40013800 2:0x40004400 3:0x40004800)
 #define USART1_SR (*(volatile uint16_t*)(0x40013800))

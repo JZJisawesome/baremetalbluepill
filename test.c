@@ -129,7 +129,7 @@ void spiStuffs()
 {
     //todo setup spi with non-inverted clock and set to latch data on positive edge
     //Also use nss with inverted logic, so rclk is toggled over the course of a transfer
-    //Don't use interrupts for this test; send data recieved over serial instead
+    //Don't use interrupts for this test; just send data recieved over serial instead
 }
 
 /* Testing Various interrupts */
@@ -159,8 +159,6 @@ __attribute__ ((interrupt ("IRQ"))) void __ISR_EXTI0()
 {
     EXTI_PR = 0x00000001;//Clear pending bit in peripheral register (set to clear)
     GPIOC_ODR |= 0x00002000;//Set led on
-    
-    ++times;
 }
 
 __attribute__ ((interrupt ("IRQ"))) void __ISR_SysTick()
