@@ -132,8 +132,17 @@ void spiStuffs()
     //Also use nss with inverted logic, so rclk is toggled over the course of a transfer
     //Don't use interrupts for this test; just send data recieved over serial instead
     
-    SPI1_CR1 = 0b0000000011111100;//lsbfirst, Enable spi, Baud rate = fPCLK/256, Master, CPOL=0, CPHA=0
-    SPI1_CR2 = 0x0004;//Enable slave select output
+    //SPI1_CR1 = 0b0000000011111100;//lsbfirst, Enable spi, Baud rate = fPCLK/256, Master, CPOL=0, CPHA=0
+    //SPI1_CR2 = 0x0004;//Enable slave select output
+    
+    //Todo proper slave select settings (software controlled)
+    //SPI1_CR1 = 0b0000001011111100;//software nss control, lsbfirst, Enable spi, Baud rate = fPCLK/256, Master, CPOL=0, CPHA=0
+    //SPI1_CR2 = 0x0084;//Enable slave select output and tx buffer empty interrupt
+    
+    //Final settings
+    SPI1_CR1 = 0b0000001111111100;//Enable software input of nss pin held high to keep in master mode, lsbfirst, enable spi, Baud rate = fPCLK/256, Master, CPOL=0, CPHA=0
+    SPI1_CR2 = 0x0080;//Enable tx buffer empty interrupt
+    NVIC_ISER1 = 0x0008;//Enable spi1 interrupt in nvic (35)(set to enable)
     
     //Testing output
     uint8_t test = 0;
@@ -152,7 +161,8 @@ void spiStuffs()
 __attribute__ ((interrupt ("IRQ"))) void __ISR_SPI1()
 {
     //After an spi transfer completes, toggle PA4 (to high, then low again) to latch data (rclk)
-    GPIOA_ODR
+    GPIOA_ODR |= 0x0010;//Set PA4 high
+    GPIOA_ODR &= 0xFFEF;//Set PA4 high
 }
 
 __attribute__ ((interrupt ("IRQ"))) void __ISR_USART1()
