@@ -466,7 +466,18 @@ extern void __delayInstructions(uint32_t numberOfInstructions);
 #define DMA_CMAR7 (*(volatile uint32_t*)(0x4002008C))
 
 //Reset + Clock Control Registers (Base: 0x40021000)
-//TODO
+#define RCC_CR (*(volatile uint32_t*)(0x40021000))
+#define RCC_CFGR (*(volatile uint32_t*)(0x40021004))
+#define RCC_CIR (*(volatile uint32_t*)(0x40021008))
+#define RCC_ABP2RSTR (*(volatile uint32_t*)(0x4002100C))
+#define RCC_ABP1RSTR (*(volatile uint32_t*)(0x40021010))
+#define RCC_AHBENR (*(volatile uint32_t*)(0x40021014))
+#define RCC_APB2ENR (*(volatile uint32_t*)(0x40021018))
+#define RCC_APB1ENR (*(volatile uint32_t*)(0x4002101C))
+#define RCC_BDCR (*(volatile uint32_t*)(0x40021020))
+#define RCC_CSR (*(volatile uint32_t*)(0x40021024))
+#define RCC_AHBRSTR (*(volatile uint32_t*)(0x40021028))
+#define RCC_CFGR2 (*(volatile uint32_t*)(0x4002102C))
 
 //Flash Memory Interface (Base: 0x40022000)
 #define FLASH_ACR (*(volatile uint32_t*)(0x40022000))

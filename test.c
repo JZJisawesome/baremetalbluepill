@@ -22,6 +22,7 @@
 //ADC1 continuous mode with interrupt (left aligned, maximum frequency, calibration beforehand)
 //PWM timer 2 channels 1 to 4; 1 constant 50%, 2 constantly increased by systick, 3 constant (but not working at the moment for some reason,) 4 being set to left aligned reading from adc
 //UART1 echoing characters at 2000000 baud
+//Recieved uart character also sent out with spi to shift register!
 
 #include "bluepill.h"
 
@@ -181,6 +182,7 @@ __attribute__ ((interrupt ("IRQ"))) void __ISR_USART1()
         SPI1_DR = data;
     
     //TODO to the RCLK pin toggling in it's own interrupt instead of waiting here
+    //The wait slows everything down; should try to do as little as possible in an isr
     //while(~(SPI1_SR & 0x0002) | (SPI1_SR & 0x0080));//Wait for transfer to finish (transmit buffer empty and no longer busy) before toggling rclk
     __delayInstructions(100);//Wait a tiny bit (for transfer to finish, because above does not work)
     
