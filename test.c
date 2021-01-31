@@ -61,7 +61,7 @@ void main()
     extistuffs();
     adcStuffs();
     spiStuffs();
-    i2cStuffs();
+    i2cStuffs();//TODO fix
     uartStuffs();
     
     return;
@@ -166,6 +166,23 @@ void i2cStuffs()
     //CCR=180 and Tpclk1=1/36000000 so: I2C sck period=2*(CCR*Tpclk1)=10us (5us Thigh, 5us Tlow)
     I2C1_CCR = 0x80B4;//Slow mode; CCR=180
     I2C1_TRISE = 0x0025;//TRISE=0d37 (37-1=36 and 36*(1/36000000)=1000ns) (max i2c rise time))
+    I2C1_CR1 = 0x0001;//Enable i2c peripheral
+    
+    //Test sending
+    I2C1_CR1 |= 0x0100;//Generate start condition
+    while (!(I2C1_SR1 & 0x0001));//Wait for start condition to be sent
+    
+    I2C1_DR = 0b10100001;//Address of 24C64 eeprom, read mode
+    while (!(I2C1_SR1 & 0x0002));//Wait for address to be sent
+    volatile uint8_t dummyRead = I2C1_SR2;//No useful flags in i2c_sr2, but must be read
+    
+    I2C1_DR = 0xAB;//High byte of eeprom address is ab
+    while (!(I2C1_SR1 & 0x0080));//Wait for transmit buffer register to be empty
+    while (!(I2C1_SR1 & 0x0004));//Wait for byte transfer finished to be 1
+    
+    I2C1_DR = 0xCD;//Low byte of eeprom address is cd
+    while (!(I2C1_SR1 & 0x0080));//Wait for transmit buffer register to be empty
+    while (!(I2C1_SR1 & 0x0004));//Wait for byte transfer finished to be 1
 }
 
 /* Testing Various interrupts */
