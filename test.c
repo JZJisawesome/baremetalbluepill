@@ -61,8 +61,8 @@ void main()
     extistuffs();
     adcStuffs();
     spiStuffs();
-    i2cStuffs();//TODO fix
     uartStuffs();
+    i2cStuffs();//TODO fix//Why is eeprom not responding?
     
     return;
 }
@@ -173,7 +173,7 @@ void i2cStuffs()
     while (!(I2C1_SR1 & 0x0001));//Wait for start condition to be sent
     
     I2C1_DR = 0b10100001;//Address of 24C64 eeprom, read mode
-    while (!(I2C1_SR1 & 0x0002));//Wait for address to be sent
+    while (!(I2C1_SR1 & 0x0002));//Wait for address to be sent//TODO Why is eeprom not responding? NACK bit set instead of addr bit
     volatile uint8_t dummyRead = I2C1_SR2;//No useful flags in i2c_sr2, but must be read
     
     I2C1_DR = 0xAB;//High byte of eeprom address is ab
