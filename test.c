@@ -160,11 +160,11 @@ void spiStuffs()
     */
 }
 
-void i2cStuffs()
+void i2cStuffs()//TODO fix why is high for 3 us and low for 9 instead of 5 and 5?
 {
     I2C1_CR2 = 0x0024;//Indicate that APB frequency is 36mhz (write 36)
     //CCR=180 and Tpclk1=1/36000000 so: I2C sck period=2*(CCR*Tpclk1)=10us (5us Thigh, 5us Tlow)
-    I2C1_CCR = 0x80B4;//Slow mode; CCR=180
+    I2C1_CCR = 0x00B4;//Slow mode; CCR=180//TODO figure out why timing is still weird?
     I2C1_TRISE = 0x0025;//TRISE=0d37 (37-1=36 and 36*(1/36000000)=1000ns) (max i2c rise time))
     I2C1_CR1 = 0x0001;//Enable i2c peripheral
     
@@ -173,7 +173,7 @@ void i2cStuffs()
     while (!(I2C1_SR1 & 0x0001));//Wait for start condition to be sent
     
     I2C1_DR = 0b10100001;//Address of 24C64 eeprom, read mode
-    while (!(I2C1_SR1 & 0x0002));//Wait for address to be sent//TODO Why is eeprom not responding? NACK bit set instead of addr bit
+    while (!(I2C1_SR1 & 0x0002));//Wait for address to be sent//TODO Why is eeprom not responding? NACK bit set instead of addr bit so this loops forever
     volatile uint8_t dummyRead = I2C1_SR2;//No useful flags in i2c_sr2, but must be read
     
     I2C1_DR = 0xAB;//High byte of eeprom address is ab
