@@ -170,10 +170,67 @@ extern void __delayInstructions(uint32_t numberOfInstructions);
 #define I2C2_TRISE (*(volatile uint16_t*)(0x40005820))
 
 //USB (Base: 0x40005C00)
-//TODO
+#define USB_EP0R (*(volatile uint16_t*)(0x40005C00))
+#define USB_EP1R (*(volatile uint16_t*)(0x40005C04))
+#define USB_EP2R (*(volatile uint16_t*)(0x40005C08))
+#define USB_EP3R (*(volatile uint16_t*)(0x40005C0C))
+#define USB_EP4R (*(volatile uint16_t*)(0x40005C10))
+#define USB_EP5R (*(volatile uint16_t*)(0x40005C14))
+#define USB_EP6R (*(volatile uint16_t*)(0x40005C18))
+#define USB_EP7R (*(volatile uint16_t*)(0x40005C1C))
+
+#define USB_CNTR (*(volatile uint16_t*)(0x40005C40))
+#define USB_ISTR (*(volatile uint16_t*)(0x40005C44))
+#define USB_FNR (*(volatile uint16_t*)(0x40005C48))
+#define USB_DADDR (*(volatile uint16_t*)(0x40005C4C))
+#define USB_BTABLE (*(volatile uint16_t*)(0x40005C50))
 
 //CAN (Base: 0x40006400)
-//TODO
+#define CAN_MCR (*(volatile uint32_t*)(0x40006400))
+#define CAN_MSR (*(volatile uint32_t*)(0x40006404))
+#define CAN_TSR (*(volatile uint32_t*)(0x40006408))
+#define CAN_RF0R (*(volatile uint32_t*)(0x4000640C))
+#define CAN_RF1R (*(volatile uint32_t*)(0x40006410))
+#define CAN_IER (*(volatile uint32_t*)(0x40006414))
+#define CAN_ESR (*(volatile uint32_t*)(0x40006418))
+#define CAN_BTR (*(volatile uint32_t*)(0x4000641C))
+
+#define CAN_TI0R (*(volatile uint32_t*)(0x40006580))
+/*#define CAN_ (*(volatile uint32_t*)(0x40006580))
+#define CAN_ (*(volatile uint32_t*)(0x40006580))
+#define CAN_ (*(volatile uint32_t*)(0x40006580))
+#define CAN_ (*(volatile uint32_t*)(0x40006580))
+#define CAN_ (*(volatile uint32_t*)(0x40006580))
+#define CAN_ (*(volatile uint32_t*)(0x40006580))
+#define CAN_ (*(volatile uint32_t*)(0x40006580))
+#define CAN_ (*(volatile uint32_t*)(0x40006580))
+#define CAN_ (*(volatile uint32_t*)(0x40006580))
+#define CAN_ (*(volatile uint32_t*)(0x40006580))
+#define CAN_ (*(volatile uint32_t*)(0x40006580))
+#define CAN_ (*(volatile uint32_t*)(0x40006580))
+#define CAN_ (*(volatile uint32_t*)(0x40006580))
+#define CAN_ (*(volatile uint32_t*)(0x40006580))
+#define CAN_ (*(volatile uint32_t*)(0x40006580))
+#define CAN_ (*(volatile uint32_t*)(0x40006580))
+#define CAN_ (*(volatile uint32_t*)(0x40006580))
+#define CAN_ (*(volatile uint32_t*)(0x40006580))
+#define CAN_ (*(volatile uint32_t*)(0x40006580))
+
+#define CAN_ (*(volatile uint32_t*)(0x40006600))
+#define CAN_ (*(volatile uint32_t*)(0x40006600))
+
+#define CAN_ (*(volatile uint32_t*)(0x40006600))
+
+#define CAN_ (*(volatile uint32_t*)(0x40006600))
+
+#define CAN_ (*(volatile uint32_t*)(0x40006600))
+
+#define CAN_ (*(volatile uint32_t*)(0x40006600))
+#define CAN_ (*(volatile uint32_t*)(0x40006600))
+#define CAN_ (*(volatile uint32_t*)(0x40006600))
+//TODO finish
+*/
+
 
 //Backup Registers (Base: 0x40006C00) (Note: This address space contains registers for the RTC)
 #define BKP_DR1 (*(volatile uint16_t*)(0x40006C04))
