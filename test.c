@@ -35,6 +35,7 @@ void setupSystick();
 void extistuffs();
 void adcStuffs();
 void spiStuffs();
+void i2cStuffs();
 void uartStuffs();
 
 void main()
@@ -47,7 +48,8 @@ void main()
     GPIOA_CRH = 0x000008b0;//Set PA9 as alternate function output and PA10 as pull down input
     //Set PB0 as input-pulldown/pullup (leaving as pulldown though)
     //Set PB1 as analog input
-    GPIOB_CRL = 0x00000008;
+    //Set PB6 and PB7 as alternative function open drain
+    GPIOB_CRL = 0xFF000008;
     GPIOB_CRH = 0x00003000;//Set PB11 as 50mhz output
     GPIOC_CRH = 0x00300000;//Set PC13 as 50mhz output
     
@@ -59,6 +61,7 @@ void main()
     extistuffs();
     adcStuffs();
     spiStuffs();
+    i2cStuffs();
     uartStuffs();
     
     return;
@@ -157,7 +160,16 @@ void spiStuffs()
     */
 }
 
+void i2cStuffs()
+{
+    I2C1_CR2 = 0x0024;//Indicate that APB frequency is 36mhz (write 36)
+    //CCR=180 and Tpclk1=1/36000000 so: I2C sck period=2*(CCR*Tpclk1)=10us (5us Thigh, 5us Tlow)
+    I2C1_CCR = 0x80B4;//Slow mode; CCR=180
+    I2C1_TRISE = 0x0025;//TRISE=0d37 (37-1=36 and 36*(1/36000000)=1000ns) (max i2c rise time))
+}
+
 /* Testing Various interrupts */
+
 
 __attribute__ ((interrupt ("IRQ"))) void __ISR_SPI1()
 {
