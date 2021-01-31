@@ -22,8 +22,8 @@
 #ifndef BLUEPILL_H
 #define BLUEPILL_H
 
-/* Useful C Definitions */
-//TODO ensure this is correct
+/* Useful C Things */
+//TODO ensure these is correct
 //Signed
 typedef signed char int8_t;
 typedef signed short int16_t;
@@ -81,7 +81,7 @@ extern void __delayInstructions(uint32_t numberOfInstructions);
 /* Useful macros */
 
 #define __hang() {while(true);}
-#define __reset() {SCB_AIRCR = 0x05FA0004;}//TODO fit thisfunction inside of the vector table
+#define __reset() {SCB_AIRCR = 0x05FA0004;}//TODO fit this function inside of the vector table
 
 /* Intrinsics */
 #define __bkpt(imm_) {__asm__ __volatile__("bkpt "#imm_);}
@@ -144,7 +144,30 @@ extern void __delayInstructions(uint32_t numberOfInstructions);
 //I2C (Bases: 1:0x40005400 2:0x40005800)
 #define I2C1_CR1 (*(volatile uint16_t*)(0x40005400))
 #define I2C2_CR1 (*(volatile uint16_t*)(0x40005800))
-//TODO finish
+
+#define I2C1_CR2 (*(volatile uint16_t*)(0x40005404))
+#define I2C2_CR2 (*(volatile uint16_t*)(0x40005804))
+
+#define I2C1_OAR1 (*(volatile uint16_t*)(0x40005408))
+#define I2C2_OAR1 (*(volatile uint16_t*)(0x40005808))
+
+#define I2C1_OAR2 (*(volatile uint16_t*)(0x4000540C))
+#define I2C2_OAR2 (*(volatile uint16_t*)(0x4000580C))
+
+#define I2C1_DR (*(volatile uint16_t*)(0x40005410))
+#define I2C2_DR (*(volatile uint16_t*)(0x40005810))
+
+#define I2C1_SR1 (*(volatile uint16_t*)(0x40005414))
+#define I2C2_SR1 (*(volatile uint16_t*)(0x40005814))
+
+#define I2C1_SR2 (*(volatile uint16_t*)(0x40005418))
+#define I2C2_SR2 (*(volatile uint16_t*)(0x40005818))
+
+#define I2C1_CCR (*(volatile uint16_t*)(0x4000541C))
+#define I2C2_CCR (*(volatile uint16_t*)(0x4000581C))
+
+#define I2C1_TRISE (*(volatile uint16_t*)(0x40005420))
+#define I2C2_TRISE (*(volatile uint16_t*)(0x40005820))
 
 //USB (Base: 0x40005C00)
 //TODO
