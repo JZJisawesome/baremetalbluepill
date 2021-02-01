@@ -112,11 +112,11 @@ extern void __delayInstructions(uint32_t numberOfInstructions);
 #define SHARED_SRAM_BASE (*(volatile uint32_t*)(0x40006000))//512b sram shared with usb/can
 
 //Device Info Registers (Note: not actually registers; part of the stm32 bootloader rom)
-#define F_SIZE (*(volatile uint16_t*)(0x1FFFF7E0))
-#define UDID_BASE (*(volatile uint32_t*)(0x1FFFF7E8))
-#define UDID_LOW (*(volatile uint32_t*)(0x1FFFF7E8))
-#define UDID_MID (*(volatile uint32_t*)(0x1FFFF7EC))
-#define UDID_HIGH (*(volatile uint32_t*)(0x1FFFF7F0))
+#define F_SIZE (*(volatile uint16_t*)(0x1FFFF7E0))//Just 16 bits
+#define UDID_BASE (*(volatile uint32_t*)(0x1FFFF7E8))//96 bits
+#define UDID_LOW_W (*(volatile uint32_t*)(0x1FFFF7E8))//Low word
+#define UDID_MID_W (*(volatile uint32_t*)(0x1FFFF7EC))//Middle word
+#define UDID_HIGH_W (*(volatile uint32_t*)(0x1FFFF7F0))//High word
 
 //RTC (Base: 0x40002800)
 #define RTC_CRH (*(volatile uint16_t*)(0x40002800))
@@ -207,6 +207,7 @@ extern void __delayInstructions(uint32_t numberOfInstructions);
 #define CAN_TDT2R (*(volatile uint32_t*)(0x400065A4))
 #define CAN_TDL2R (*(volatile uint32_t*)(0x400065A8))
 #define CAN_TDH2R (*(volatile uint32_t*)(0x400065AC))
+
 #define CAN_RI0R (*(volatile uint32_t*)(0x400065B0))
 #define CAN_RDT0R (*(volatile uint32_t*)(0x400065B4))
 #define CAN_RDL0R (*(volatile uint32_t*)(0x400065B8))
@@ -221,13 +222,48 @@ extern void __delayInstructions(uint32_t numberOfInstructions);
 #define CAN_FS1R (*(volatile uint32_t*)(0x4000660C))
 #define CAN_FFA1R (*(volatile uint32_t*)(0x40006614))
 #define CAN_FA1R (*(volatile uint32_t*)(0x4000661C))
-//TODO finish
-#define CAN_ (*(volatile uint32_t*)(0x40006600))
-#define CAN_ (*(volatile uint32_t*)(0x40006600))
-#define CAN_ (*(volatile uint32_t*)(0x40006600))
-//TODO finish
-*/
 
+#define CAN_F0R1 (*(volatile uint32_t*)(0x40006640))
+#define CAN_F0R2 (*(volatile uint32_t*)(0x40006644))
+
+#define CAN_F1R1 (*(volatile uint32_t*)(0x40006648))
+#define CAN_F1R2 (*(volatile uint32_t*)(0x4000664C))
+
+#define CAN_F2R1 (*(volatile uint32_t*)(0x40006650))
+#define CAN_F2R2 (*(volatile uint32_t*)(0x40006654))
+
+#define CAN_F3R1 (*(volatile uint32_t*)(0x40006658))
+#define CAN_F3R2 (*(volatile uint32_t*)(0x4000665C))
+
+#define CAN_F4R1 (*(volatile uint32_t*)(0x40006660))
+#define CAN_F4R2 (*(volatile uint32_t*)(0x40006664))
+
+#define CAN_F5R1 (*(volatile uint32_t*)(0x40006668))
+#define CAN_F5R2 (*(volatile uint32_t*)(0x4000666C))
+
+#define CAN_F6R1 (*(volatile uint32_t*)(0x40006670))
+#define CAN_F6R2 (*(volatile uint32_t*)(0x40006674))
+
+#define CAN_F7R1 (*(volatile uint32_t*)(0x40006678))
+#define CAN_F7R2 (*(volatile uint32_t*)(0x4000667C))
+
+#define CAN_F8R1 (*(volatile uint32_t*)(0x40006680))
+#define CAN_F8R2 (*(volatile uint32_t*)(0x40006684))
+
+#define CAN_F9R1 (*(volatile uint32_t*)(0x40006688))
+#define CAN_F9R2 (*(volatile uint32_t*)(0x4000668C))
+
+#define CAN_F10R1 (*(volatile uint32_t*)(0x40006690))
+#define CAN_F10R2 (*(volatile uint32_t*)(0x40006694))
+
+#define CAN_F11R1 (*(volatile uint32_t*)(0x40006698))
+#define CAN_F11R2 (*(volatile uint32_t*)(0x4000669C))
+
+#define CAN_F12R1 (*(volatile uint32_t*)(0x400066A0))
+#define CAN_F12R2 (*(volatile uint32_t*)(0x400066A4))
+
+#define CAN_F13R1 (*(volatile uint32_t*)(0x400066A8))
+#define CAN_F13R2 (*(volatile uint32_t*)(0x400066AC))
 
 //Backup Registers (Base: 0x40006C00) (Note: This address space contains registers for the RTC)
 #define BKP_DR1 (*(volatile uint16_t*)(0x40006C04))
@@ -574,13 +610,13 @@ extern void __delayInstructions(uint32_t numberOfInstructions);
 //Cortex Registers
 //SysTick (Base: 0xE000E010)
 #define SYST_CTRL (*(volatile uint32_t*)(0xE000E010))
-#define SYST_CSR (*(volatile uint32_t*)(0xE000E010))
+#define SYST_CSR (*(volatile uint32_t*)(0xE000E010))//Name used by some datasheets
 
 #define SYST_LOAD (*(volatile uint32_t*)(0xE000E014))
-#define SYST_RVR (*(volatile uint32_t*)(0xE000E014))
+#define SYST_RVR (*(volatile uint32_t*)(0xE000E014))//Name used by some datasheets
 
 #define SYST_VAL (*(volatile uint32_t*)(0xE000E018))
-#define SYST_CVR (*(volatile uint32_t*)(0xE000E018))
+#define SYST_CVR (*(volatile uint32_t*)(0xE000E018))//Name used by some datasheets
 
 #define SYST_CALIB (*(volatile uint32_t*)(0xE000E01C))
 
