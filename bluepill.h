@@ -72,27 +72,27 @@ typedef unsigned int* uintptr_t;
 #ifdef NDEBUG
     #define assert(condition) ((void)0)
 #else//Spin forever if assertion fails (allows debugger to be used)
-    #define assert(condition) {if (condition == 0) __hang();}
+    #define assert(condition) do {if (condition == 0) __hang();} while (0)
 #endif
 
 /* Useful functions */
-extern void __delayInstructions(uint32_t numberOfInstructions);
+extern void __delayInstructions(uint32_t numberOfInstructions);//21.1851ns per instruction avg
 
 /* Useful macros */
 
-#define __hang() {while(true);}
-#define __reset() {SCB_AIRCR = 0x05FA0004;}//TODO fit this function inside of the vector table
+#define __hang() do {while(true);} while (0)
+#define __reset() do {SCB_AIRCR = 0x05FA0004;} while (0)//TODO fit this function inside of the vector table
 
 /* Intrinsics */
-#define __bkpt(imm_) {__asm__ __volatile__("bkpt "#imm_);}
-#define __dmb {__asm__ __volatile__("dmb");}
-#define __dsb {__asm__ __volatile__("dsb");}
-#define __isb {__asm__ __volatile__("isb");}
-#define __nop() {__asm__ __volatile__("nop");}
-#define __sev() {__asm__ __volatile__("sev");}
-#define __svc(imm_) {__asm__ __volatile__("svc "#imm_);}
-#define __wfe() {__asm__ __volatile__("wfe");}
-#define __wfi() {__asm__ __volatile__("wfi");}
+#define __bkpt(imm_) do {__asm__ __volatile__("bkpt "#imm_);} while (0)
+#define __dmb do {__asm__ __volatile__("dmb");} while (0)
+#define __dsb do {__asm__ __volatile__("dsb");} while (0)
+#define __isb do {__asm__ __volatile__("isb");} while (0)
+#define __nop() do {__asm__ __volatile__("nop");} while (0)
+#define __sev() do {__asm__ __volatile__("sev");} while (0)
+#define __svc(imm_) do {__asm__ __volatile__("svc "#imm_);} while (0)
+#define __wfe() do {__asm__ __volatile__("wfe");} while (0)
+#define __wfi() do {__asm__ __volatile__("wfi");} while (0)
 
 
 /**********************************************************************************************/

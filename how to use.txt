@@ -4,8 +4,12 @@ arm-none-eabi-gcc -mthumb -g -Os -mcpu=cortex-m3 -c ./file.ext
 Link
 arm-none-eabi-ld --print-memory-usage -T bluepill.ld ./list.o ./of.o ./object.o ./files .o
 
+
 Convert to intel hex
 arm-none-eabi-objcopy -O ihex ./a.out ./a.out.hex
 
 Flash (may take a couple trys)
 st-flash --format=ihex write ./a.out.hex
+
+//Testing linking with gcc
+arm-none-eabi-gcc -lgcc -ffreestanding -fbuiltin -nostdlib --print-memory-usage -T bluepill.ld ./list.o ./of.o ./object.o ./files .o

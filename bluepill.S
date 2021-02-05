@@ -81,7 +81,7 @@
 .word __ISR_UsageFault
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 @The next 16 bytes are unused (reserved). Put useful functions here instead of wasting flash
-.global __delayInstructions@Takes up 8 bytes
+.global __delayInstructions@Takes up 8 bytes@1 instruction is approximatly 21.1851ns
 __delayInstructions:@uint32_t numberOfInstructions
     subs r0, 2@sub and bcs instructions (also update condition flags)
     bcs __delayInstructions@Keep looping if underflow didn't occur (C=1)
