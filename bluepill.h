@@ -111,6 +111,7 @@ extern void __delayInstructions(uint32_t numberOfInstructions);//21.1851ns per i
  * Also note that registers that can be accessed by halfwords and only have into in the least
  * significant 16 bits, will be uint16_t* instead of uint32_t*
  */
+//FIXME test these registers with a variety of boards. Some don't like accessing certain registers by halfwords, only by words, while some don't care (ex. had to fix certain dma registers to be accessed by 32 bits)
 
 //Pointers To Storage (Flash, SRAM, USB/CAN SRAM, etc.)
 #define FLASH_BASE (*(volatile uint32_t*)(0x08000000))//128k of flash on most clones
