@@ -20,6 +20,7 @@
 //Provides things implemented by bluepill.S, MMIO pointers/registers, and more
 //NOTE You must link with -ffreestanding -nostartfiles
 //See https://cs107e.github.io/guides/gcc/
+//Also recommended to link with --specs=nano.specs to save space 
 
 #ifndef BLUEPILL_H
 #define BLUEPILL_H
