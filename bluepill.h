@@ -17,65 +17,17 @@
 */
 
 /* Useful library for the blue pill devboard */
-//Provides things implemented by bluepill.S, MMIO pointers/registers, datatypes and more
+//Provides things implemented by bluepill.S, MMIO pointers/registers, and more
+//NOTE You must link with -ffreestanding -nostartfiles
+//See https://cs107e.github.io/guides/gcc/
 
 #ifndef BLUEPILL_H
 #define BLUEPILL_H
 
+#include <stdint.h>
+#include <stddef.h>
+
 /* Useful C Things */
-//TODO ensure these is correct
-//Signed
-typedef signed char int8_t;
-typedef signed short int16_t;
-typedef signed int int32_t;
-typedef signed long long int64_t;
-
-typedef signed int int_fast8_t;
-typedef signed int int_fast16_t;
-typedef signed int int_fast32_t;
-typedef signed long long int_fast64_t;
-
-typedef signed char int_least8_t;
-typedef signed short int_least6_t;
-typedef signed int int_least2_t;
-typedef signed long long int_least64_t;
-
-typedef signed long long intmax_t;
-
-typedef signed int* intptr_t;
-
-//Unsigned
-typedef unsigned char uint8_t;
-typedef unsigned short uint16_t;
-typedef unsigned int uint32_t;
-typedef unsigned long long uint64_t;
-
-typedef unsigned int uint_fast8_t;
-typedef unsigned int uint_fast16_t;
-typedef unsigned int uint_fast32_t;
-typedef unsigned long long uint_fast64_t;
-
-typedef unsigned char uint_least8_t;
-typedef unsigned short uint_least6_t;
-typedef unsigned int uint_least2_t;
-typedef unsigned long long uint_least64_t;
-
-typedef unsigned long long uintmax_t;
-
-typedef unsigned int* uintptr_t;
-
-typedef unsigned int size_t;
-
-#define bool _Bool
-#define true 1
-#define false 0
-#define __bool_true_false_are_defined 1
-
-#ifdef NDEBUG
-    #define assert(condition) ((void)0)
-#else//Spin forever if assertion fails (allows debugger to be used)
-    #define assert(condition) do {if ((condition) == 0) __hang();} while (0)
-#endif
 
 extern int memcmp(const void* lhs, const void* rhs, size_t count);//TODO
 extern void* memset(void* dest, int ch, size_t count);//TODO

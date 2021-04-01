@@ -7,6 +7,9 @@
  *
  * Note that you can also override __clockInit, but memory will not be initialized at that point 
  * so writing in assembly is recommended for that function
+ *
+ * NOTE You must link with -ffreestanding -nostartfiles
+ * See https://cs107e.github.io/guides/gcc/
 */
 
 @Note: I tried to do this from scratch as much as possible, but needed to look at other sources for certain things
